@@ -1,0 +1,76 @@
+.banner_logo {
+    width: 100px;
+}
+
+.urgent {
+    width: 100px !important;
+    background-color: red;
+    border-radius: 10px;
+    box-shadow: black 0 0 10px;
+    text-align: center;
+}
+
+.high {
+    width: 100px !important;
+    background-color: #3b42d3;
+    border-radius: 10px;
+    box-shadow: black 0 0 10px;
+    text-align: center;
+}
+
+.medium {
+    width: 100px !important;
+    background-color: #08ee0c;
+    border-radius: 10px;
+    box-shadow: black 0 0 10px;
+    text-align: center;
+}
+
+.low {
+    width: 100px !important;
+    background-color: #bbbbc2;
+    border-radius: 10px;
+    box-shadow: black 0 0 10px;
+    text-align: center;
+}
+
+.not-yet {
+    width: 100px !important;
+    border-radius: 10px;
+    box-shadow: black 0 0 10px;
+    text-align: center;
+}
+.on-going {
+    width: 100px !important;
+    border-radius: 10px;
+    box-shadow: #fa0303 0 0 10px;
+    text-align: center;
+}
+.review {
+    width: 100px !important;
+    border-radius: 10px;
+    box-shadow: #f6e203 0 0 10px;
+    text-align: center;
+}
+.pending {
+    width: 100px !important;
+    border-radius: 10px;
+    box-shadow: #6c5555 0 0 10px;
+    text-align: center;
+}
+
+.finished {
+    width: 100px !important;
+    border-radius: 10px;
+    box-shadow: #0435fc 0 0 10px;
+    text-align: center;
+}
+
+.input-group-append {
+    cursor: pointer;
+}
+
+#cancelBtn, #editBtn {
+    width: 150px !important;
+    height: 45px !important;
+}
