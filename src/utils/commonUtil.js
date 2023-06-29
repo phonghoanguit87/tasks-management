@@ -19,6 +19,7 @@ export function getPriority(priority = null) {
 }
 
 export  function setCookie(name, value, expDays = 7) {
+  console.log("setCookie > name -->", value);
   const currentDate = new Date();
   currentDate.setTime(currentDate.getTime() + (expDays * 24 * 60 * 60 * 1000));
   let expires = "expires=" + currentDate.toUTCString();
@@ -33,13 +34,17 @@ export function getCookie(cname) {
   
   for (let i = 0; i < ca.length; i++) {
     let c = ca[i];
-    while (c.charAt(0) == ' ') {
+    while (c.charAt(0) === ' ') {
       c = c.substring(1);
     }
-    if (c.indexOf(name) == 0) {
+    if (c.indexOf(name) === 0) {
       return c.substring(name.length, c.length);
     }
   }
   
   return undefined;
+}
+
+export function clearCookie() {
+  document.cookie = "user=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 }

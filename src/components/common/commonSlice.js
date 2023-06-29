@@ -8,7 +8,7 @@ const commonSlice = createSlice({
     initialState: {
         loading: false,
         loginInfo: {
-            loginUser: {username: "", password: ""},
+            loginUser: {},
             isLogin: false
         },
     },
@@ -33,12 +33,13 @@ const commonSlice = createSlice({
 const getLoginAuthor = createAsyncThunk(
     "common/getLoginAuthor",
     async (user) => {
-        const url = `${config.apiURL}/users?loginName=${user.username}`;
+        console.log("common/getLoginAuthor ", user);
+        const url = `${config.apiURL}/users?loginName=${user.loginName}`;
         let isLogin = false;
         let loginUser;
         try {
             const resp = await axios.get(url);
-            
+            console.log("resp.data[0] --> ", resp.data[0]);
             if (resp.data[0].password === user.password) {
                 loginUser = resp.data[0];
                 isLogin = true;

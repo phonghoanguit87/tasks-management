@@ -3,16 +3,15 @@ import { useDispatch, useSelector } from "react-redux"
 import {useNavigate} from "react-router-dom";
 import {loginSelector} from "../../redux/selector";
 import {getLoginAuthor} from "./commonSlice";
-import {setCookie} from "../../utils/commonUtil";
-import logo from "../../resource/tasks_logo.png";
+import {setCookie, getCookie} from "../../utils/commonUtil";
+import logo from "../../tasks_logo.png";
 import "../../css/Login.css";
 
 function Login() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const userlogined = useSelector(loginSelector);
-    const [user, setUser] = useState(userlogined);
-    
+    const [user, setUser] = useState(userlogined.loginUser);
     const setValueForUser = (key, value) => {
         const newVal = {...user, [key]: value};
         setUser(newVal);
@@ -25,7 +24,7 @@ function Login() {
     useEffect(() => {
         if (userlogined.isLogin) {
             navigate("/tasks");
-            setCookie("user", JSON.stringify(userlogined));
+            setCookie("user", JSON.stringify(userlogined.loginUser));
         }
     }, [userlogined, navigate]);
     
@@ -42,10 +41,10 @@ function Login() {
                     <span className="far fa-user"></span>
                     <input
                         type="text"
-                        name="userName"
-                        id="userName"
-                        placeholder="Username"
-                        onChange={e => setValueForUser("username", e.target.value)}
+                        name="loginName"
+                        id="loginName"
+                        placeholder="Login name"
+                        onChange={e => setValueForUser("loginName", e.target.value)}
                     />
                 </div>
                 <div className="form-field d-flex align-items-center">

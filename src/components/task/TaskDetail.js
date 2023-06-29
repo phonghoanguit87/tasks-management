@@ -16,10 +16,10 @@ function TaskDetail() {
     useEffect(() => {
         dispatch(getTasksById(taskId));
     }, [dispatch, taskId]);
-    
+    console.log("TaskDetail > taskId -->", taskId);
     return <>
         <Banner/>
-        <ToolBarMenu/>
+        <ToolBarMenu taskId={taskId} />
         {loading && <Loading />}
         <div className="main mt-5">
             <div className="row mt-2">

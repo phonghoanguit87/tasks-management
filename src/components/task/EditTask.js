@@ -1,6 +1,6 @@
 import {getTasksById} from "./taskSlice";
 import {useEffect, useState} from "react";
-import {useParams} from "react-router-dom";
+import {Navigate, useParams} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {loadingSelector, selectTaskSelector} from "../../redux/selector";
 import Banner from "../common/Banner";
@@ -16,6 +16,7 @@ function EditTask() {
     console.log("EditTask > taskId -->", taskId);
     let priorities = [];
     let statuses = [];
+    
     useEffect(() => {
         dispatch(getTasksById(taskId));
     }, [dispatch, taskId]);
@@ -26,6 +27,8 @@ function EditTask() {
     }
     const [startDate, setStartDate] = useState(task.start);
     const [deadlineDate, setDeadlineDate] = useState(task.deadline);
+    console.log("EditTask > startDate -->", startDate);
+    console.log("EditTask > deadlineDate -->", deadlineDate);
     const handleStartDateChange = (date) => {
         setStartDate(date);
     };
@@ -33,8 +36,8 @@ function EditTask() {
     const handleDeadlineDateChange = (date) => {
         setDeadlineDate(date);
     };
-    console.log("EditTask > priorities -->", priorities);
-    console.log("EditTask > statuses -->", statuses);
+
+    
     return <>
         <Banner/>
         <EditsButton/>
@@ -91,27 +94,31 @@ function EditTask() {
                 <div className="col-3">
                     <div className="row me-1"><span>Start</span></div>
                     <div className="row me-1">
-                        {/*<DatePicker*/}
-                        {/*    id="startDate"*/}
-                        {/*    className="form-control"*/}
-                        {/*    selected={new Date(startDate)}*/}
-                        {/*    onChange={handleStartDateChange}*/}
-                        {/*    dateFormat="yyyy/mm/dd"*/}
-                        {/*    placeholderText="Select a date"*/}
-                        {/*/>*/}
+                        {startDate === undefined ? ("") : (
+                            <DatePicker
+                                id="startDate"
+                                className="form-control"
+                                selected={new Date(startDate)}
+                                onChange={handleStartDateChange}
+                                dateFormat="yyyy/mm/dd"
+                                placeholderText="Select a date"
+                            />
+                        )}
                     </div>
                 </div>
                 <div className="col-3">
                     <div className="row me-1"><span>Deadline</span></div>
                     <div className="row me-1">
-                        {/*<DatePicker*/}
-                        {/*    id="deadlineDate"*/}
-                        {/*    className="form-control"*/}
-                        {/*    selected={new Date(deadlineDate)}*/}
-                        {/*    onChange={handleDeadlineDateChange}*/}
-                        {/*    dateFormat="yyyy/mm/dd"*/}
-                        {/*    placeholderText="Select a date"*/}
-                        {/*/>*/}
+                        {deadlineDate === undefined ? ("") : (
+                            <DatePicker
+                                id="deadlineDate"
+                                className="form-control"
+                                selected={new Date(deadlineDate)}
+                                onChange={handleDeadlineDateChange}
+                                dateFormat="yyyy/mm/dd"
+                                placeholderText="Select a date"
+                            />
+                        )}
                     </div>
                 </div>
             </div>
