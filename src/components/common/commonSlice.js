@@ -7,12 +7,17 @@ const commonSlice = createSlice({
     name: "common",
     initialState: {
         loading: false,
+        currentUrl: "",
         loginInfo: {
             loginUser: {},
             isLogin: false
         },
     },
-    reducers: {},
+    reducers: {
+        setCurrentUrl: (state,action)=>{
+            state.currentUrl = action.payload
+        },
+    },
     extraReducers: (builder) => {
         builder
             .addCase(getLoginAuthor.pending, (state, action) => {

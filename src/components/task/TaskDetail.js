@@ -6,17 +6,18 @@ import {loadingSelector, selectTaskSelector} from "../../redux/selector";
 import Banner from "../common/Banner";
 import Loading from "../common/Loading";
 import ToolBarMenu from "../common/ToolBarMenu";
+import commonSlice from "../common/commonSlice";
 function TaskDetail() {
     const dispatch = useDispatch()
     let { taskId } = useParams();
     const task = useSelector(selectTaskSelector);
     const loading = useSelector(loadingSelector);
-    console.log("TaskDetail > taskId -->", taskId);
+    commonSlice.actions.setCurrentUrl("/tasks/detail/" + taskId);
     
     useEffect(() => {
         dispatch(getTasksById(taskId));
     }, [dispatch, taskId]);
-    console.log("TaskDetail > taskId -->", taskId);
+    
     return <>
         <Banner/>
         <ToolBarMenu taskId={taskId} />

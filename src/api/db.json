@@ -1,0 +1,87 @@
+{
+  "teams": [
+    { "id": 1, "teamName": "development", "createBy": "phonghoang" }
+  ],
+  "users": [
+    {
+      "id": 1,
+      "name": "Phong Hoang",
+      "loginName": "phonghoang",
+      "password": "test",
+      "teamName": "development",
+      "role": "member"
+    }
+  ],
+  "tasks": [
+    {
+      "id": 1,
+      "taskTitle": "Investigate case study solution",
+      "priority": "urgent",
+      "status": "on-going",
+      "assignTo": "phonghoang",
+      "content": "Investigate about technologies will be used in project",
+      "start": "2023/07/24",
+      "deadline": "2023/07/26",
+      "todo": [
+        {
+          "id": 1,
+          "todoTitle":  "Investigate about technologies",
+          "status": "on-going",
+          "workDate": "2023/07/24"
+        },
+        {
+          "id": 2,
+          "todoTitle":  "Prototype basic function",
+          "status": "on-going",
+          "workDate": "2023/07/24"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "taskTitle": "Implement fake api",
+      "priority": "high",
+      "status": "on-going",
+      "assignTo": "phonghoang",
+      "content": "Implement fake api with json-server",
+      "start": "2023/07/24",
+      "deadline": "2023/07/26",
+      "todo": [
+        {
+          "id": 1,
+          "todoTitle":  "research about json-server and lowdb",
+          "status": "on-going",
+          "workDate": "2023/07/24"
+        },
+        {
+          "id": 2,
+          "todoTitle":  "API structures",
+          "status": "on-going",
+          "workDate": "2023/07/24"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "taskTitle": "Document and readme file",
+      "priority": "medium",
+      "status": "not-yet",
+      "assignTo": "phonghoang",
+      "content": "write document and readme file",
+      "start": "2023/07/24",
+      "deadline": "2023/07/26",
+      "todo": []
+    },
+    {
+      "id": 4,
+      "taskTitle": "Prepare present file",
+      "priority": "low",
+      "status": "not-yet",
+      "assignTo": "phonghoang",
+      "content": "Prepare present file",
+      "start": "2023/07/24",
+      "deadline": "2023/07/26",
+      "todo": []
+    }
+  ]
+}

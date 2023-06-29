@@ -10,7 +10,11 @@ const taskSlice = createSlice({
         taskList: [],
         selectTask: {},
     },
-    reducers: {},
+    reducers: {
+        setSelectTask: (state, action) => {
+            state.selectTask = action.payload;
+        }
+    },
     extraReducers: (builder) => {
         builder
             .addCase(getTasks.pending, (state, action) => {
