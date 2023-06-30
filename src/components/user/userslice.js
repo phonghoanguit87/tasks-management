@@ -41,7 +41,7 @@ const getUserByTeamName = createAsyncThunk(
     async (teamName) => {
         const url = `${config.apiURL}/users?teamName=${teamName}`;
         const res = await axios.get(url);
-        
+        console.log("getUserByTeamName > res.data --> ", res.data);
         return res.data;
     }
 );

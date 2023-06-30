@@ -8,19 +8,21 @@ import Loading from "../common/Loading";
 import ToolBarMenu from "../common/ToolBarMenu";
 import commonSlice from "../common/commonSlice";
 function TaskDetail() {
+    
     const dispatch = useDispatch()
     let { taskId } = useParams();
     const task = useSelector(selectTaskSelector);
     const loading = useSelector(loadingSelector);
-    commonSlice.actions.setCurrentUrl("/tasks/detail/" + taskId);
     
     useEffect(() => {
         dispatch(getTasksById(taskId));
+        dispatch(commonSlice.actions.setCurrentUrl(`/tasks/detail/${taskId}`));
     }, [dispatch, taskId]);
-    
+
     return <>
         <Banner/>
         <ToolBarMenu taskId={taskId} />
+        
         {loading && <Loading />}
         <div className="main mt-5">
             <div className="row mt-2">

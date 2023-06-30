@@ -48,3 +48,22 @@ export function getCookie(cname) {
 export function clearCookie() {
   document.cookie = "user=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 }
+
+export function formatCSVData(data) {
+  let csvData = '';
+  const keys = Object.keys(data[0]);
+  
+  csvData += keys.join(',') + '\n';
+  
+  data.forEach((element) => {
+    let row = '';
+    
+    keys.forEach((key) => {
+      row += element[key] + ',';
+    });
+    
+    csvData += row + '\n';
+  });
+  console.log("formatCSVData > csvData -->", csvData);
+  return csvData;
+}

@@ -9,6 +9,7 @@ const taskSlice = createSlice({
         loading: false,
         taskList: [],
         selectTask: {},
+        userTaskList: [],
     },
     reducers: {
         setSelectTask: (state, action) => {
@@ -39,6 +40,27 @@ const taskSlice = createSlice({
                 state.loading = false
                 toastr.error("The system can not load data!", "Error");
             })
+            .addCase(updateTask.pending, (state, action) => {
+                state.loading = true;
+            })
+            .addCase(updateTask.fulfilled, (state, action) => {
+                state.loading = false;
+            })
+            .addCase(updateTask.rejected, (state, action) => {
+                state.loading = false
+                toastr.error("The task can not updated!", "Error");
+            })
+            .addCase(getTasksByUsers.pending, (state, action) => {
+                state.loading = true;
+            })
+            .addCase(getTasksByUsers.fulfilled, (state, action) => {
+                state.loading = false;
+                state.userTaskList = action.payload;
+            })
+            .addCase(getTasksByUsers.rejected, (state, action) => {
+                state.loading = false
+                toastr.error("The task can not updated!", "Error");
+            })
     }
 });
 
@@ -46,6 +68,22 @@ const getTasks = createAsyncThunk(
     "task/getTasks",
     async (username) => {
         const url = `${config.apiURL}/tasks?assignTo=${username}`;
+        const res = await axios.get(url);
+        
+        return res.data
+    }
+);
+
+const getTasksByUsers = createAsyncThunk(
+    "task/getTasksByUsers",
+    async (users) => {
+        let params = "";
+        users.forEach((user) => {
+            params += `assignTo=${user}&`;
+        });
+        console.log("getTasksByUsers > params -->", params);
+
+        const url = `${config.apiURL}/tasks?${params}`;
         const res = await axios.get(url);
         
         return res.data
@@ -63,12 +101,12 @@ const getTasksById = createAsyncThunk(
     }
 );
 
-const updateTaskById = createAsyncThunk(
-    "task/updateTaskById",
-    async (task) => {
-        const url = `${config.apiURL}/tasks/id=${task.id}`;
-        const res = await axios.put(url, task);
-        
+const updateTask = createAsyncThunk(
+    "task/updateTask",
+    async (taskData) => {
+        const url = `${config.apiURL}/tasks/${taskData.id}`;
+        const res = await axios.put(url, taskData);
+        console.log("updateTask > res.data -->", res.data)
         return res.data
     }
 );
@@ -86,8 +124,9 @@ const addTask = createAsyncThunk(
 export {
     getTasks,
     getTasksById,
-    updateTaskById,
-    addTask
+    updateTask,
+    addTask,
+    getTasksByUsers
 };
 
 export default taskSlice;

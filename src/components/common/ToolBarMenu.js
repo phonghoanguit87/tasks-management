@@ -1,10 +1,20 @@
 import { Link } from "react-router-dom";
+import { CSVLink } from "react-csv";
 import taskSlice from "../task/taskSlice";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
+import {loginSelector, taskListSelector, userTaskListSelector} from "../../redux/selector";
+import {formatCSVData} from "../../utils/commonUtil";
+
 function ToolBarMenu(props) {
-    console.log("ToolBarMenu > props -->", props);
     const dispatch = useDispatch();
+    const userlogined = useSelector(loginSelector);
+    const taskList = useSelector(taskListSelector);
+    const tasks = useSelector(userTaskListSelector);
+    
+    let csvData = [];
     let taskId = undefined;
+    let isLeader = false;
+    let isList = false;
     let isDelete = false;
     let isAdd = true;
     let isDuplicate = false;
@@ -23,12 +33,28 @@ function ToolBarMenu(props) {
         isAdd = props.isAdd;
     }
     
+    if(props.isList) {
+        isList = props.isList;
+    }
+    
+    if(props.isLeader) {
+        isLeader = props.isLeader;
+    }
+    
     function resetSelectTask() {
         dispatch(taskSlice.actions.setSelectTask({}));
     }
     
     return (
         <div className="d-flex flex-row-reverse bd-highlight">
+            {userlogined.isLeader ? (
+                <Link id="leader" to={"/dashboard"} className="btn btn-dark me-1"><i className="bi bi-gear"/></Link>
+            ) : ("")}
+            {isList && (tasks.length > 0 || taskList.length > 0) ? (
+                <CSVLink data={isLeader && isList ? formatCSVData(tasks) : formatCSVData(taskList)} separator={";"} className="btn btn-secondary me-1">
+                    <i className="bi bi-download"/>
+                </CSVLink>
+            ) : ("")}
             {isDelete ? (
                 <Link id="delete" to={"/"} className="btn btn-danger me-1"><i className="bi bi-x-circle"/></Link>
             

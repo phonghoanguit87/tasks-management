@@ -9,6 +9,22 @@
       "loginName": "phonghoang",
       "password": "test",
       "teamName": "development",
+      "role": "leader"
+    },
+    {
+      "id": 2,
+      "name": "Tran Anh",
+      "loginName": "anhtran",
+      "password": "test",
+      "teamName": "development",
+      "role": "member"
+    },
+    {
+      "id": 3,
+      "name": "Minh Nguyen",
+      "loginName": "minhnguyen",
+      "password": "test",
+      "teamName": "development",
       "role": "member"
     }
   ],
@@ -79,6 +95,28 @@
       "status": "not-yet",
       "assignTo": "phonghoang",
       "content": "Prepare present file",
+      "start": "2023/07/24",
+      "deadline": "2023/07/26",
+      "todo": []
+    },
+    {
+      "id": 5,
+      "taskTitle": "Create test plan",
+      "priority": "low",
+      "status": "not-yet",
+      "assignTo": "minhnguyen",
+      "content": "Prepare test plan",
+      "start": "2023/07/24",
+      "deadline": "2023/07/26",
+      "todo": []
+    },
+    {
+      "id": 6,
+      "taskTitle": "Execute test",
+      "priority": "low",
+      "status": "not-yet",
+      "assignTo": "anhtran",
+      "content": "Execute test",
       "start": "2023/07/24",
       "deadline": "2023/07/26",
       "todo": []

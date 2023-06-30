@@ -1,7 +1,7 @@
 import {useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux"
-import {taskListSelector, loginSelector, loadingSelector} from "../../redux/selector";
-import {getTasks} from "./taskSlice";
+import {taskListSelector, loginSelector, loadingSelector, selectTaskSelector} from "../../redux/selector";
+import taskSlice, {getTasks} from "./taskSlice";
 import Loading from "../common/Loading";
 import Banner from "../common/Banner";
 import { Link } from "react-router-dom";
@@ -13,11 +13,12 @@ function TaskList() {
     const taskList = useSelector(taskListSelector);
     const userlogined = useSelector(loginSelector);
     const loading = useSelector(loadingSelector);
-    commonSlice.actions.setCurrentUrl("/tasks");
-    console.log("TaskList > userlogined -->", userlogined);
+    const selectTask = useSelector(selectTaskSelector);
+    
     useEffect(()=>{
         dispatch(getTasks(userlogined.loginUser.loginName));
-    },[]);
+        dispatch(commonSlice.actions.setCurrentUrl("/tasks"));
+    },[userlogined]);
     
     function deleteTaskEvent(e, task) {
         e.preventDefault();
@@ -26,7 +27,7 @@ function TaskList() {
     
     return <>
         <Banner/>
-        <ToolBarMenu />
+        <ToolBarMenu isList={true}/>
         {loading && <Loading />}
         <hr/>
         <table className="table">
@@ -61,7 +62,13 @@ function TaskList() {
                         </div>
                     </td>
                     <td>
-                        <Link id="edit" className="btn btn-warning" to={`/tasks/edit/${task.id}`}><i className="bi bi-pencil-square"/></Link>
+                        <Link onClick={
+                            (e)=>{
+                                (selectTask && selectTask.id === task.id)
+                                    ? dispatch(taskSlice.actions.setSelectTask({}))
+                                    : dispatch(taskSlice.actions.setSelectTask(task))
+                            }
+                        } id="edit" className="btn btn-warning" to={`/tasks/edit/${task.id}`}><i className="bi bi-pencil-square"/></Link>
                         <Link id="duplicate" className="btn btn-info" to={`/tasks/add`}><i className="bi bi-files"/></Link>
                         <Link id="delete" className="btn btn-danger" to={`/tasks/delete/${task.id}`}><i className="bi bi-x-circle"/></Link>
                     </td>

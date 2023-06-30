@@ -3,6 +3,8 @@ import axios from "axios";
 import toastr from "toastr";
 import {config} from "../../config";
 
+const LEAER_ROLE = "leader";
+
 const commonSlice = createSlice({
     name: "common",
     initialState: {
@@ -10,7 +12,8 @@ const commonSlice = createSlice({
         currentUrl: "",
         loginInfo: {
             loginUser: {},
-            isLogin: false
+            isLogin: false,
+            isLeader: false,
         },
     },
     reducers: {
@@ -27,6 +30,7 @@ const commonSlice = createSlice({
                 state.loading = false;
                 state.loginInfo.loginUser = action.payload.data;
                 state.loginInfo.isLogin = action.payload.isLogin;
+                state.loginInfo.isLeader = action.payload.isLeader;
             })
             .addCase(getLoginAuthor.rejected, (state, action) => {
                 state.loading = false
@@ -38,16 +42,21 @@ const commonSlice = createSlice({
 const getLoginAuthor = createAsyncThunk(
     "common/getLoginAuthor",
     async (user) => {
-        console.log("common/getLoginAuthor ", user);
+
         const url = `${config.apiURL}/users?loginName=${user.loginName}`;
         let isLogin = false;
-        let loginUser;
+        let loginUser = {};
+        let isLeader = false;
         try {
             const resp = await axios.get(url);
-            console.log("resp.data[0] --> ", resp.data[0]);
+
             if (resp.data[0].password === user.password) {
                 loginUser = resp.data[0];
                 isLogin = true;
+            }
+            
+            if (resp.data[0].role === LEAER_ROLE) {
+                isLeader = true;
             }
         } catch (error) {
             console.error(error);
@@ -55,7 +64,8 @@ const getLoginAuthor = createAsyncThunk(
         
         return {
             data: loginUser,
-            isLogin: isLogin
+            isLogin: isLogin,
+            isLeader: isLeader,
         }
     }
 );

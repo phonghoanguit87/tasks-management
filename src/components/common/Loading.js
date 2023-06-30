@@ -34,7 +34,6 @@ function Loading(props) {
             }
         },500)
     },[str]);
-    console.log("... loading ...");
     return <div style={styleDiv}>
         <span style={styleStr}>{str}</span>
     </div>

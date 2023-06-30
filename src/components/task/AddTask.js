@@ -15,7 +15,6 @@ import EditsButton from "../common/EditsButton";
 function AddTask() {
     const loading = useSelector(loadingSelector);
     const selectTask = useSelector(selectTaskSelector);
-    console.log("AddTask > selectTask -->", selectTask);
     
     const [ task, setTask ] = useState({})
     const [ type, setType ] = useState("New")

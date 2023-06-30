@@ -1,19 +1,21 @@
-import {getTasksById} from "./taskSlice";
+import {getTasksById, updateTask} from "./taskSlice";
 import {useEffect, useState} from "react";
-import {Navigate, useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
-import {loadingSelector, selectTaskSelector} from "../../redux/selector";
+import {currentUrlSelector, loadingSelector, selectTaskSelector} from "../../redux/selector";
 import Banner from "../common/Banner";
 import Loading from "../common/Loading";
 import {getPriority, getStatus} from "../../utils/commonUtil";
 import DatePicker from 'react-datepicker';
-import EditsButton from "../common/EditsButton";
+
 function EditTask() {
-    const dispatch = useDispatch()
     let { taskId } = useParams();
+    const dispatch = useDispatch()
+    const navigate = useNavigate();
     const task = useSelector(selectTaskSelector);
     const loading = useSelector(loadingSelector);
-    console.log("EditTask > taskId -->", taskId);
+    const currentUrl = useSelector(currentUrlSelector);
+
     let priorities = [];
     let statuses = [];
     
@@ -27,8 +29,6 @@ function EditTask() {
     }
     const [startDate, setStartDate] = useState(task.start);
     const [deadlineDate, setDeadlineDate] = useState(task.deadline);
-    console.log("EditTask > startDate -->", startDate);
-    console.log("EditTask > deadlineDate -->", deadlineDate);
     const handleStartDateChange = (date) => {
         setStartDate(date);
     };
@@ -36,24 +36,54 @@ function EditTask() {
     const handleDeadlineDateChange = (date) => {
         setDeadlineDate(date);
     };
-
+    
+    const handleWorkDateChange = (date) => {
+        setDeadlineDate(date);
+    };
+    
+    const [ form, setForm ] = useState(task)
+    function cancelEvent(e) {
+        e.preventDefault();
+        navigate(`${currentUrl}`);
+    }
+    
+    function handleChange(e) {
+        e.preventDefault();
+        const { name, value } = e.target;
+        
+        setForm({
+            ...form,
+            [name]: value
+        });
+    }
+    
+    function submitBook(e) {
+        e.preventDefault()
+        
+        dispatch(updateTask(form));
+        navigate(`/tasks/detail/${form.id}`);
+    }
     
     return <>
         <Banner/>
-        <EditsButton/>
         {loading && <Loading />}
-        <div className="main mt-5">
+        <form onSubmit={submitBook} className="main mt-5">
+            <div className="d-flex flex-row bd-highlight mt-3 mb-3">
+                <button id="cancelBtn" className="btn btn-secondary" onClick={(e)=>{cancelEvent(e)}}>Cancel</button>
+                <button type="submit" id="editBtn" className="btn btn-info ms-3">Save</button>
+            </div>
+            
             <div className="row mt-2">
                 <div className="col-2">
                     <div className="row me-1"><span>No.</span></div>
                     <div className="row me-1">
-                        <input value={task.id} className="form-control"  disabled={true}/>
+                        <input value={form.id} className="form-control"  disabled={true}/>
                     </div>
                 </div>
                 <div className="col-10">
                     <div className="row me-1"><span>Title</span></div>
                     <div className="row me-1">
-                        <input value={task.taskTitle} className="form-control"/>
+                        <input name="taskTitle" value={form.taskTitle} className="form-control" onChange={(e)=> handleChange(e)}/>
                     </div>
                 </div>
             </div>
@@ -62,7 +92,7 @@ function EditTask() {
                 <div className="col-2">
                     <div className="row me-1"><span>Assign to</span></div>
                     <div className="row me-1">
-                        <input value={task.assignTo} className="form-control"/>
+                        <input name="assignTo" value={form.assignTo} className="form-control" onChange={(e)=> handleChange(e)}/>
                     </div>
                 </div>
                 <div className="col-2">
@@ -126,7 +156,7 @@ function EditTask() {
             <div className="row mt-3">
                 <div className="row"><span>Content</span></div>
                 <div className="row">
-                    <textarea value={task.content} className="form-control" rows="10"></textarea>
+                    <textarea name="content" value={task.content} className="form-control" rows="10" onChange={(e)=> handleChange(e)}></textarea>
                 </div>
             </div>
             
@@ -145,17 +175,40 @@ function EditTask() {
                         <tbody>
                         {task.todo && task.todo.map((todo)=>(
                             <tr key={todo.id}>
-                                <td>{todo.id}</td>
-                                <td>{todo.todoTitle}</td>
-                                <td>{todo.status}</td>
-                                <td>{todo.workDate}</td>
+                                <td>
+                                    <input value={todo.id} className="form-control"/>
+                                </td>
+                                <td>
+                                    <input value={todo.todoTitle} className="form-control"/>
+                                </td>
+                                <td>
+                                    <select className="form-select" id="todoStatus">
+                                        {
+                                            statuses.map((value, index) => {
+                                                if(value === todo.status)
+                                                    return <option selected key={index} value={value}>{value}</option>
+                                                return <option key={index} value={value}>{value}</option>
+                                            })
+                                        }
+                                    </select>
+                                </td>
+                                <td>
+                                    <DatePicker
+                                        id="workDate"
+                                        className="form-control"
+                                        selected={new Date(todo.workDate)}
+                                        onChange={handleDeadlineDateChange}
+                                        dateFormat="yyyy/mm/dd"
+                                        placeholderText="Select a date"
+                                    />
+                                </td>
                             </tr>
                         ))}
                         </tbody>
                     </table>
                 </div>
             </div>
-        </div>
+        </form>
     </>
 }
 
