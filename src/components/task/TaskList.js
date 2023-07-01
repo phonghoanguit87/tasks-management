@@ -1,11 +1,13 @@
 import {useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux"
-import {taskListSelector, loginSelector, loadingSelector, selectTaskSelector} from "../../redux/selector";
-import taskSlice, {getTasks} from "./taskSlice";
+import { Link } from "react-router-dom";
+
 import Loading from "../common/Loading";
 import Banner from "../common/Banner";
-import { Link } from "react-router-dom";
 import ToolBarMenu from "../common/ToolBarMenu";
+
+import {taskListSelector, loginSelector, loadingSelector, selectTaskSelector} from "../../redux/selector";
+import taskSlice, {getTasks} from "./taskSlice";
 import commonSlice from "../common/commonSlice";
 
 function TaskList() {
@@ -22,7 +24,7 @@ function TaskList() {
     
     function deleteTaskEvent(e, task) {
         e.preventDefault();
-        // dispatch(bookListSlice.actions.selectBook(item));
+        // Todo dispatch(bookListSlice.actions.selectBook(item));
     }
     
     return <>

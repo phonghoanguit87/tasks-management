@@ -1,12 +1,15 @@
-import {getTasksById} from "./taskSlice";
 import {useEffect} from "react";
 import {useParams} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
-import {loadingSelector, selectTaskSelector} from "../../redux/selector";
+
 import Banner from "../common/Banner";
 import Loading from "../common/Loading";
 import ToolBarMenu from "../common/ToolBarMenu";
+
+import {getTasksById} from "./taskSlice";
+import {loadingSelector, selectTaskSelector} from "../../redux/selector";
 import commonSlice from "../common/commonSlice";
+
 function TaskDetail() {
     
     const dispatch = useDispatch()
@@ -21,7 +24,10 @@ function TaskDetail() {
 
     return <>
         <Banner/>
-        <ToolBarMenu taskId={taskId} />
+        <ToolBarMenu taskId={taskId} crumbs={{
+            title: "Detail",
+            path: `/tasks:${taskId}}`
+        }}/>
         
         {loading && <Loading />}
         <div className="main mt-5">

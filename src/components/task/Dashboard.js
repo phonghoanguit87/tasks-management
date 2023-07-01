@@ -1,12 +1,14 @@
-import Banner from "../common/Banner";
 import {useDispatch, useSelector} from "react-redux";
-import {loadingSelector, loginSelector, usersSelector, userTaskListSelector} from "../../redux/selector";
 import {useEffect} from "react";
-import {getUserByTeamName} from "../user/userslice";
-import taskSlice, {getTasksByUsers} from "./taskSlice";
 import {Link} from "react-router-dom";
+
+import Banner from "../common/Banner";
 import Loading from "../common/Loading";
 import ToolBarMenu from "../common/ToolBarMenu";
+
+import {loadingSelector, loginSelector, usersSelector, userTaskListSelector} from "../../redux/selector";
+import {getUserByTeamName} from "../user/userslice";
+import {getTasksByUsers} from "./taskSlice";
 
 function Dashboard() {
     const dispatch = useDispatch();

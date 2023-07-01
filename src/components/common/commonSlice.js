@@ -3,7 +3,7 @@ import axios from "axios";
 import toastr from "toastr";
 import {config} from "../../config";
 
-const LEAER_ROLE = "leader";
+const LEADER_ROLE = "leader";
 
 const commonSlice = createSlice({
     name: "common",
@@ -58,7 +58,7 @@ const getLoginAuthor = createAsyncThunk(
                 isLogin = true;
             }
             
-            if (resp.data[0].role === LEAER_ROLE) {
+            if (resp.data[0].role === LEADER_ROLE) {
                 isLeader = true;
             }
         } catch (error) {

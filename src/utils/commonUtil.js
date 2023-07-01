@@ -65,6 +65,6 @@ export function formatCSVData(data) {
     
     csvData += row + '\n';
   });
-  console.log("formatCSVData > csvData -->", csvData);
+
   return csvData;
 }

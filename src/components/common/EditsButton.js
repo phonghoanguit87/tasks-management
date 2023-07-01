@@ -13,7 +13,6 @@ function EditsButton(props) {
     }
     return (
         <div className="d-flex flex-row bd-highlight mt-3">
-            {/*<button id="cancelBtn" className="btn btn-secondary" onClick={(e)=>{cancelEvent(e)}}>Cancel</button>*/}
             <Link id="cancelBtn" className="btn btn-secondary" to={`${currentUrl}`}>Cancel</Link>
             
             <button id="editBtn" className="btn btn-info ms-3" onClick={(e)=>{editBookEvent(e)}}>Save</button>

@@ -1,12 +1,14 @@
-import {getTasksById, updateTask} from "./taskSlice";
 import {useEffect, useState} from "react";
 import {useNavigate, useParams} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
-import {currentUrlSelector, loadingSelector, selectTaskSelector} from "../../redux/selector";
+import DatePicker from 'react-datepicker';
+
 import Banner from "../common/Banner";
 import Loading from "../common/Loading";
+
+import {getTasksById, updateTask} from "./taskSlice";
+import {currentUrlSelector, loadingSelector, selectTaskSelector} from "../../redux/selector";
 import {getPriority, getStatus} from "../../utils/commonUtil";
-import DatePicker from 'react-datepicker';
 
 function EditTask() {
     let { taskId } = useParams();

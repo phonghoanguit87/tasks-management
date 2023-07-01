@@ -1,11 +1,13 @@
 import {useEffect, useState} from "react";
 import { useDispatch, useSelector } from "react-redux"
 import {useNavigate} from "react-router-dom";
-import {loginSelector} from "../../redux/selector";
-import {getLoginAuthor} from "./commonSlice";
-import {setCookie, getCookie} from "../../utils/commonUtil";
+
 import logo from "../../tasks_logo.png";
 import "../../css/Login.css";
+
+import {loginSelector} from "../../redux/selector";
+import {getLoginAuthor} from "./commonSlice";
+import {setCookie} from "../../utils/commonUtil";
 
 function Login() {
     const navigate = useNavigate();
@@ -24,8 +26,11 @@ function Login() {
     useEffect(() => {
         if (userlogined.isLogin) {
             navigate("/tasks");
-            let cuser = {loginName: userlogined.loginUser.loginName, password: userlogined.loginUser.password};
-            setCookie("user", JSON.stringify(cuser));
+            let cUser = {
+                loginName: userlogined.loginUser.loginName,
+                password: userlogined.loginUser.password
+            };
+            setCookie("user", JSON.stringify(cUser));
         }
     }, [userlogined, navigate]);
     
