@@ -8,7 +8,7 @@ import ToolBarMenu from "../common/ToolBarMenu";
 
 import {loadingSelector, loginSelector, usersSelector, userTaskListSelector} from "../../redux/selector";
 import {getUserByTeamName} from "../user/userslice";
-import {getTasksByUsers} from "./taskSlice";
+import {deleteTaskById, getTasksByUsers} from "./taskSlice";
 
 function Dashboard() {
     const dispatch = useDispatch();
@@ -35,6 +35,11 @@ function Dashboard() {
         e.preventDefault();
         console.log("[Dashboard > onClickHandle] ", userName);
         dispatch(getTasksByUsers(userName));
+    }
+    
+    function deleteTaskEvent(e, taskId) {
+        e.preventDefault();
+        dispatch(deleteTaskById(taskId));
     }
     
     return <>
@@ -94,7 +99,11 @@ function Dashboard() {
                                     <td>
                                         <Link id="edit" className="btn btn-warning" to={`/tasks/edit/${task.id}`}><i className="bi bi-pencil-square"/></Link>
                                         <Link id="duplicate" className="btn btn-info" to={`/tasks/add`}><i className="bi bi-files"/></Link>
-                                        <Link id="delete" className="btn btn-danger" to={`/tasks/delete/${task.id}`}><i className="bi bi-x-circle"/></Link>
+                                        <Link
+                                            onClick={(e)=>deleteTaskEvent(e, task.id)}
+                                            id="delete"
+                                            className="btn btn-danger"
+                                        ><i className="bi bi-x-circle"/></Link>
                                     </td>
                                 </tr>
                             ))}

@@ -2,6 +2,10 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import {config} from "../../config";
 import toastr from "toastr";
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
+
+const popupSwal = withReactContent(Swal)
 
 const taskSlice = createSlice({
     name:"task",
@@ -61,6 +65,22 @@ const taskSlice = createSlice({
                 state.loading = false
                 toastr.error("The task can not updated!", "Error");
             })
+            .addCase(deleteTaskById.pending, (state, action) => {
+                state.loading = true;
+            })
+            .addCase(deleteTaskById.fulfilled, (state, action) => {
+                state.loading = false;
+                popupSwal.fire({
+                    html: <i>The task deleted was success!</i>,
+                    icon: 'success'
+                }).then(() => {
+                    window.location.reload();
+                });
+            })
+            .addCase(deleteTaskById.rejected, (state, action) => {
+                state.loading = false
+                toastr.error("The task can not updated!", "Error");
+            })
     }
 });
 
@@ -106,7 +126,7 @@ const updateTask = createAsyncThunk(
     async (taskData) => {
         const url = `${config.apiURL}/tasks/${taskData.id}`;
         const res = await axios.put(url, taskData);
-        console.log("updateTask > res.data -->", res.data)
+        
         return res.data
     }
 );
@@ -121,12 +141,23 @@ const addTask = createAsyncThunk(
     }
 );
 
+const deleteTaskById = createAsyncThunk(
+    "task/deleteTaskById",
+    async (taskId) => {
+        const url = `${config.apiURL}/tasks/${taskId}`;
+        const res = await axios.delete(url);
+        
+        return res.data;
+    }
+);
+
 export {
     getTasks,
     getTasksById,
     updateTask,
     addTask,
-    getTasksByUsers
+    getTasksByUsers,
+    deleteTaskById
 };
 
 export default taskSlice;

@@ -1,17 +1,18 @@
 import {useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux"
-import { Link } from "react-router-dom";
+import {Link} from "react-router-dom";
 
 import Loading from "../common/Loading";
 import Banner from "../common/Banner";
 import ToolBarMenu from "../common/ToolBarMenu";
 
 import {taskListSelector, loginSelector, loadingSelector, selectTaskSelector} from "../../redux/selector";
-import taskSlice, {getTasks} from "./taskSlice";
+import taskSlice, {deleteTaskById, getTasks} from "./taskSlice";
 import commonSlice from "../common/commonSlice";
 
 function TaskList() {
     const dispatch = useDispatch();
+    
     const taskList = useSelector(taskListSelector);
     const userlogined = useSelector(loginSelector);
     const loading = useSelector(loadingSelector);
@@ -22,9 +23,9 @@ function TaskList() {
         dispatch(commonSlice.actions.setCurrentUrl("/tasks"));
     },[userlogined]);
     
-    function deleteTaskEvent(e, task) {
+    function deleteTaskEvent(e, taskId) {
         e.preventDefault();
-        // Todo dispatch(bookListSlice.actions.selectBook(item));
+        dispatch(deleteTaskById(taskId));
     }
     
     return <>
@@ -72,7 +73,11 @@ function TaskList() {
                             }
                         } id="edit" className="btn btn-warning" to={`/tasks/edit/${task.id}`}><i className="bi bi-pencil-square"/></Link>
                         <Link id="duplicate" className="btn btn-info" to={`/tasks/add`}><i className="bi bi-files"/></Link>
-                        <Link id="delete" className="btn btn-danger" to={`/tasks/delete/${task.id}`}><i className="bi bi-x-circle"/></Link>
+                        <Link
+                            onClick={(e)=>deleteTaskEvent(e, task.id)}
+                            id="delete"
+                            className="btn btn-danger"
+                        ><i className="bi bi-x-circle"/></Link>
                     </td>
                 </tr>
             ))}
