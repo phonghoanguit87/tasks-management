@@ -18,13 +18,13 @@ export function getPriority(priority = null) {
   return priorityList.filter((element) => element !== priority);
 }
 
-export  function setCookie(name, value, expDays = 7) {
+export  function setCookie(cname, value, expDays = 7) {
   console.log("setCookie > name -->", value);
   const currentDate = new Date();
   currentDate.setTime(currentDate.getTime() + (expDays * 24 * 60 * 60 * 1000));
   let expires = "expires=" + currentDate.toUTCString();
   
-  document.cookie = name + "=" + value + ";" + expires + ";path=/";
+  document.cookie = cname + "=" + value + ";" + expires + ";path=/";
 }
 
 export function getCookie(cname) {
@@ -45,8 +45,9 @@ export function getCookie(cname) {
   return undefined;
 }
 
-export function clearCookie() {
-  document.cookie = "user=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+export function clearCookie(cname) {
+  const expires = 'expires=Thu, 01 Jan 1970 00:00:01 GMT;'
+  document.cookie = cname + "=" + JSON.stringify({}) + ";" + expires + ";path=/";
 }
 
 export function formatCSVData(data) {

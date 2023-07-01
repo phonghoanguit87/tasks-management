@@ -20,6 +20,9 @@ const commonSlice = createSlice({
         setCurrentUrl: (state,action)=>{
             state.currentUrl = action.payload
         },
+        setLoginInfo: (state,action)=>{
+            state.loginInfo = action.payload
+        }
     },
     extraReducers: (builder) => {
         builder

@@ -24,7 +24,8 @@ function Login() {
     useEffect(() => {
         if (userlogined.isLogin) {
             navigate("/tasks");
-            setCookie("user", JSON.stringify(userlogined.loginUser));
+            let cuser = {loginName: userlogined.loginUser.loginName, password: userlogined.loginUser.password};
+            setCookie("user", JSON.stringify(cuser));
         }
     }, [userlogined, navigate]);
     

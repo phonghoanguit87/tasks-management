@@ -46,7 +46,7 @@ function ToolBarMenu(props) {
     }
     
     return (
-        <div className="d-flex flex-row-reverse bd-highlight">
+        <div className="d-flex flex-row-reverse bd-highlight mt-4">
             {userlogined.isLeader ? (
                 <Link id="leader" to={"/dashboard"} className="btn btn-dark me-1"><i className="bi bi-gear"/></Link>
             ) : ("")}
