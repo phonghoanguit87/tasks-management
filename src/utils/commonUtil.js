@@ -68,3 +68,12 @@ export function formatCSVData(data) {
 
   return csvData;
 }
+
+export function getCurrentDate() {
+  const currentDate = new Date();
+  const date = currentDate.getDate();
+  const month = currentDate.getMonth();
+  const year = currentDate.getFullYear();
+  
+  return `${year}/${month}/${date}`;
+}

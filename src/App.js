@@ -7,6 +7,7 @@ import TaskDetail from "./components/task/TaskDetail";
 import AddTask from "./components/task/AddTask";
 import EditTask from "./components/task/EditTask";
 import Dashboard from "./components/task/Dashboard";
+import DuplicateTask from "./components/task/DuplicateTask";
 
 import {useEffect} from "react";
 import {getCookie} from "./utils/commonUtil";
@@ -37,10 +38,11 @@ function App() {
             <Routes>
                 <Route path="/dashboard" element={<Dashboard/>}/>
                 <Route path="/tasks" element={<TaskList/>}/>
-                <Route path="*" element={<Login/>}/>
                 <Route path="/tasks/detail/:taskId" element={<TaskDetail/>}/>
                 <Route path="/tasks/edit/:taskId" element={<EditTask/>}/>
                 <Route path="/tasks/add" element={<AddTask/>}/>
+                <Route path="/tasks/duplicate/:taskId" element={<DuplicateTask/>}/>
+                <Route path="*" element={<Login/>}/>
             </Routes>
         </div>
     );

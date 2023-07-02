@@ -1,11 +1,14 @@
 import {useEffect, useState} from "react";
-import {useSelector} from "react-redux";
-import {loadingSelector, selectTaskSelector} from "../../redux/selector";
+import {useDispatch, useSelector} from "react-redux";
+import {useNavigate, useParams} from "react-router-dom";
+import { DatePicker } from 'antd';
+
 import Banner from "../common/Banner";
 import Loading from "../common/Loading";
-import {getPriority, getStatus} from "../../utils/commonUtil";
-import DatePicker from 'react-datepicker';
-import EditsButton from "../common/EditsButton";
+
+import {currentUrlSelector, loadingSelector, selectTaskSelector} from "../../redux/selector";
+import {addTask, getTasksById, updateTask} from "./taskSlice";
+import {STATUS_LIST, PRIORITY_LIST} from "../../config";
 
 /**
  * Add new task includes duplicate
@@ -13,40 +16,61 @@ import EditsButton from "../common/EditsButton";
  * @constructor
  */
 function AddTask() {
+    const dispatch = useDispatch()
+    const navigate = useNavigate();
+    
     const loading = useSelector(loadingSelector);
     const selectTask = useSelector(selectTaskSelector);
+    const currentUrl = useSelector(currentUrlSelector);
     
+    const dateFormat = 'YYYY/MM/DD';
     const [ task, setTask ] = useState({})
     const [ type, setType ] = useState("New")
-    let priorities = getPriority();
-    let statuses = getStatus();
-    const [startDate, setStartDate] = useState(new Date());
-    const [deadlineDate, setDeadlineDate] = useState(new Date());
-    
+
     useEffect(()=>{
         if (Object.keys(selectTask).length !== 0) {
             setTask(selectTask)
             setType("Duplicate");
-            priorities = getPriority(task.priority);
-            statuses = getStatus(task.status);
-            // setStartDate(new Date(task.start));
-            // setDeadlineDate(new Date(task.deadline));
         }
-    },[selectTask])
+        
+        if (Object.keys(selectTask).length !== 0 && type === "New") {
+            navigate(`/tasks/detail/${selectTask.id}`);
+        }
+    },[dispatch, selectTask])
     
-    const handleStartDateChange = (date) => {
-        setStartDate(date);
+    const [ form, setForm ] = useState(task)
+    function cancelEvent(e) {
+        e.preventDefault();
+        navigate(`${currentUrl}`);
+    }
+    const handleDatePickerChange = (date, dateString, pickerName) => {
+        const year = date.year();
+        const month = date.month() + 1;
+        const day = date.date();
+        
+        handleChange(pickerName,`${year}/${month}/${day}`);
     };
-    
-    const handleDeadlineDateChange = (date) => {
-        setDeadlineDate(date);
-    };
+    function handleChange(name, value) {
+        setForm({
+            ...form,
+            [name]: value
+        });
+    }
+    function addTaskEvent(e) {
+        e.preventDefault()
+        
+        dispatch(addTask(form));
+    }
     
     return <>
-        <Banner/>
-        <EditsButton/>
         {loading && <Loading />}
-        <div className="main mt-5">
+        <Banner/>
+        <form onSubmit={addTaskEvent} className="main mt-5">
+            <div className="d-flex flex-row bd-highlight mt-3 mb-3">
+                <button id="cancelBtn" className="btn btn-secondary" onClick={(e)=>{cancelEvent(e)}}>Cancel</button>
+                <button type="submit" id="editBtn" className="btn btn-info ms-3">Save</button>
+            </div>
+            
             <div className="row mt-2">
                 <div className="col-2">
                     <div className="row me-1"><span>No.</span></div>
@@ -58,10 +82,19 @@ function AddTask() {
                     <div className="row me-1"><span>Title</span></div>
                     <div className="row me-1">
                         {type === "Duplicate" ? (
-                            <input value={task.taskTitle} className="form-control"/>
+                            <input
+                                name="taskTitle"
+                                value={form.taskTitle}
+                                className="form-control"
+                                onChange={(e)=>setForm({...form,taskTitle:e.target.value})}
+                            />
                         
                         ) : (
-                            <input className="form-control"/>
+                            <input
+                                name="taskTitle"
+                                className="form-control"
+                                onChange={(e)=>setForm({...form,taskTitle:e.target.value})}
+                            />
                         )}
                     </div>
                 </div>
@@ -71,27 +104,49 @@ function AddTask() {
                 <div className="col-2">
                     <div className="row me-1"><span>Assign to</span></div>
                     <div className="row me-1">
-                        <input value="" className="form-control"/>
+                        {type === "Duplicate" ? (
+                            <input
+                                name="assignTo"
+                                onChange={(e)=>setForm({...form,assignTo:e.target.value})}
+                                value={form.assignTo}
+                                className="form-control"
+                            />
+                        ) : (
+                            <input
+                                name="assignTo"
+                                onChange={(e)=>setForm({...form,assignTo:e.target.value})}
+                                className="form-control"
+                            />
+                        )}
                     </div>
                 </div>
                 <div className="col-2">
                     <div className="row me-1"><span>Priority</span></div>
                     <div className="row me-1">
                         {type === "Duplicate" ? (
-                            <select className="form-select" id="priority">
-                                <option selected>{task.priority}</option>
+                            <select
+                                name="priority"
+                                onChange={(e)=>setForm({...form,priority:e.target.value})}
+                                className="form-select"
+                                id="priority"
+                                defaultValue={task.priority}
+                            >
                                 {
-                                    priorities.map((value, index) => {
+                                    PRIORITY_LIST.map((value, index) => {
                                         return <option key={index} value={value}>{value}</option>
                                     })
                                 }
                             </select>
                         ) : (
-                            <select className="form-select" id="priority">
+                            <select
+                                name="priority"
+                                onChange={(e)=>setForm({...form,priority:e.target.value})}
+                                className="form-select"
+                                id="priority"
+                                defaultValue={PRIORITY_LIST[0]}
+                            >
                                 {
-                                    priorities.map((value, index) => {
-                                        if(index === 0)
-                                            return <option selected key={index} value={value}>{value}</option>
+                                    PRIORITY_LIST.map((value, index) => {
                                         return <option key={index} value={value}>{value}</option>
                                     })
                                 }
@@ -103,20 +158,28 @@ function AddTask() {
                     <div className="row me-1"><span>Status</span></div>
                     <div className="row me-1">
                         {type === "Duplicate" ? (
-                            <select className="form-select" id="status">
-                                <option selected>{task.status}</option>
+                            <select
+                                name="status"
+                                onChange={(e)=>setForm({...form,status:e.target.value})}
+                                className="form-select"
+                                id="status"
+                                defaultValue={task.status}
+                            >
                                 {
-                                    statuses.map((value, index) => {
+                                    STATUS_LIST.map((value, index) => {
                                         return <option key={index} value={value}>{value}</option>
                                     })
                                 }
                             </select>
                         ):(
-                            <select className="form-select" id="status">
+                            <select
+                                name="status"
+                                onChange={(e)=>setForm({...form,status:e.target.value})}                                className="form-select"
+                                id="status"
+                                defaultValue={STATUS_LIST[0]}
+                            >
                                 {
-                                    statuses.map((value, index) => {
-                                        if(index === 0)
-                                            return <option selected key={index} value={value}>{value}</option>
+                                    STATUS_LIST.map((value, index) => {
                                         return <option key={index} value={value}>{value}</option>
                                     })
                                 }
@@ -128,27 +191,49 @@ function AddTask() {
                 <div className="col-3">
                     <div className="row me-1"><span>Start</span></div>
                     <div className="row me-1">
-                        <DatePicker
-                            id="startDate"
-                            className="form-control"
-                            selected={startDate}
-                            onChange={handleStartDateChange}
-                            dateFormat="yyyy/mm/dd"
-                            placeholderText="Select a date"
-                        />
+                        {type === "Duplicate" ? (
+                            <DatePicker
+                                id="startDate"
+                                className="form-control"
+                                // defaultValue={form.start}
+                                onChange={(date, dateString) => handleDatePickerChange(date, dateString, "start")}
+                                dateFormat={dateFormat}
+                                placeholderText="Select a date"
+                            />
+                        ) : (
+                            <DatePicker
+                                id="startDate"
+                                className="form-control"
+                                // defaultValue={moment().format(dateFormat)}
+                                onChange={(date, dateString) => handleDatePickerChange(date, dateString, "start")}
+                                dateFormat={dateFormat}
+                                placeholderText="Select a date"
+                            />
+                        )}
                     </div>
                 </div>
                 <div className="col-3">
                     <div className="row me-1"><span>Deadline</span></div>
                     <div className="row me-1">
-                        <DatePicker
-                            id="deadlineDate"
-                            className="form-control"
-                            selected={deadlineDate}
-                            onChange={handleDeadlineDateChange}
-                            dateFormat="yyyy/mm/dd"
-                            placeholderText="Select a date"
-                        />
+                        {type === "Duplicate" ? (
+                            <DatePicker
+                                id="deadlineDate"
+                                className="form-control"
+                                // defaultValue={form.deadline}
+                                onChange={(date, dateString) => handleDatePickerChange(date, dateString, "deadline")}
+                                dateFormat={dateFormat}
+                                placeholderText="Select a date"
+                            />
+                        ) : (
+                            <DatePicker
+                                id="deadlineDate"
+                                className="form-control"
+                                // defaultValue={moment().format(dateFormat)}
+                                onChange={(date, dateString) => handleDatePickerChange(date, dateString, "deadline")}
+                                dateFormat={dateFormat}
+                                placeholderText="Select a date"
+                            />
+                        )}
                     </div>
                 </div>
             </div>
@@ -157,9 +242,16 @@ function AddTask() {
                 <div className="row"><span>Content</span></div>
                 <div className="row">
                     {type === "Duplicate" ? (
-                        <textarea value={task.content} className="form-control" rows="10"></textarea>
+                        <textarea
+                            onChange={(e)=>setForm({...form,content:e.target.value})}
+                            value={task.content}
+                            className="form-control"
+                            rows="10"/>
                     ) : (
-                        <textarea value="" className="form-control" rows="10"></textarea>
+                        <textarea
+                            onChange={(e)=>setForm({...form,content:e.target.value})}
+                            className="form-control"
+                            rows="10"/>
                     )}
                 </div>
             </div>
@@ -188,11 +280,9 @@ function AddTask() {
                                         <input value={todo.todoTitle} className="form-control"/>
                                     </td>
                                     <td>
-                                        <select className="form-select" id="todoStatus">
+                                        <select defaultValue={todo.status} className="form-select" id="todoStatus">
                                             {
-                                                statuses.map((value, index) => {
-                                                    if(value === todo.status)
-                                                        return <option selected key={index} value={value}>{value}</option>
+                                                STATUS_LIST.map((value, index) => {
                                                     return <option key={index} value={value}>{value}</option>
                                                 })
                                             }
@@ -202,9 +292,9 @@ function AddTask() {
                                         <DatePicker
                                             id="workDate"
                                             className="form-control"
-                                            selected={new Date(todo.workDate)}
-                                            onChange={handleDeadlineDateChange}
-                                            dateFormat="yyyy/mm/dd"
+                                            // defaultValue={new Date(todo.workDate)}
+                                            onChange={(date, dateString) => handleChange("start", dateString)}
+                                            dateFormat={dateFormat}
                                             placeholderText="Select a date"
                                         />
                                     </td>
@@ -221,11 +311,9 @@ function AddTask() {
                                         <input value="" className="form-control"/>
                                     </td>
                                     <td>
-                                        <select className="form-select" id="todoStatus">
+                                        <select defaultValue={STATUS_LIST[0]} className="form-select" id="todoStatus">
                                             {
-                                                statuses.map((value, index) => {
-                                                    if(index === 0)
-                                                        return <option selected key={index} value={value}>{value}</option>
+                                                STATUS_LIST.map((value, index) => {
                                                     return <option key={index} value={value}>{value}</option>
                                                 })
                                             }
@@ -235,9 +323,9 @@ function AddTask() {
                                         <DatePicker
                                             id="workDate"
                                             className="form-control"
-                                            selected={new Date()}
-                                            onChange={handleDeadlineDateChange}
-                                            dateFormat="yyyy/mm/dd"
+                                            // defaultValue={moment().format(dateFormat)}
+                                            onChange={(date, dateString) => handleChange("start", dateString)}
+                                            dateFormat={dateFormat}
                                             placeholderText="Select a date"
                                         />
                                     </td>
@@ -250,7 +338,7 @@ function AddTask() {
                     </table>
                 </div>
             </div>
-        </div>
+        </form>
     </>
 }
 

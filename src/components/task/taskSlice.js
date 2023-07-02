@@ -1,9 +1,9 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import {config} from "../../config";
 import toastr from "toastr";
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
+import {config} from "../../config";
 
 const popupSwal = withReactContent(Swal)
 
@@ -71,7 +71,6 @@ const taskSlice = createSlice({
             })
             .addCase(getTasksByUsers.fulfilled, (state, action) => {
                 state.loading = false;
-                // state.userTaskList = action.payload;
                 state.userTaskList = action.payload.data;
                 state.pagination.totalRecord = action.payload.number;
             })
@@ -84,16 +83,31 @@ const taskSlice = createSlice({
             })
             .addCase(deleteTaskById.fulfilled, (state, action) => {
                 state.loading = false;
+                state.selectTask = action.payload;
                 popupSwal.fire({
                     html: <i>The task deleted was success!</i>,
                     icon: 'success'
-                }).then(() => {
-                    window.location.reload();
                 });
             })
             .addCase(deleteTaskById.rejected, (state, action) => {
                 state.loading = false
                 toastr.error("The task can not updated!", "Error");
+            })
+            .addCase(addTask.pending, (state, action) => {
+                state.loading = true;
+            })
+            .addCase(addTask.fulfilled, (state, action) => {
+                state.loading = false;
+                state.selectTask = action.payload;
+                popupSwal.fire({
+                    html: <i>The task added was success!</i>,
+                    icon: 'success'
+                })
+                toastr.success("The task added was success!", "Success");
+            })
+            .addCase(addTask.rejected, (state, action) => {
+                state.loading = false
+                toastr.error("The task can not added!", "Error");
             })
     }
 });
@@ -136,8 +150,7 @@ const getTasksByUsers = createAsyncThunk(
         users.forEach((user) => {
             params += `assignTo=${user}&`;
         });
-        console.log("getTasksByUsers > params -->", params);
-        console.log("getTasksByUsers > paginationStr -->", paginationStr);
+
         const urlAllRecord = `${config.apiURL}/tasks?${params}`;
         const url = `${config.apiURL}/tasks?${params}${paginationStr}`;
         const resOfAll = await axios.get(urlAllRecord);
@@ -175,8 +188,9 @@ const addTask = createAsyncThunk(
     async (taskData) => {
         const url = `${config.apiURL}/tasks`;
         const res = await axios.post(url, taskData);
+        console.log("taskSlice > addTask > res.data", res.data)
         
-        return res.data
+        return res.data;
     }
 );
 
@@ -213,7 +227,6 @@ const setPage = (username, page, isDashboard) => {
     return (dispatch,getState) => {
         dispatch(taskSlice.actions.setPage(page))
         if(isDashboard) {
-            console.log("run at isDashboard: ", isDashboard)
             dispatch(getTasksByUsers({users: username, pagination: {
                     perPage:getState().task.pagination.perPage,
                     page: page
@@ -226,7 +239,6 @@ const setPage = (username, page, isDashboard) => {
                 }}));
         }
     }
-    
 }
 
 export {

@@ -26,13 +26,10 @@ function TaskList() {
     const selectTask = useSelector(selectTaskSelector);
     const pagination = useSelector(paginationSelector);
     
-    console.log("TaskList > pagination > ", pagination);
-    
     useEffect(()=>{
-        console.log("TaskList > useEffect > pagination > ", pagination);
         dispatch(getTasks({username: userlogined.loginUser.loginName, pagination: pagination}));
         dispatch(commonSlice.actions.setCurrentUrl("/tasks"));
-    },[userlogined]);
+    },[userlogined, selectTask, pagination, dispatch]);
     
     function deleteTaskEvent(e, taskId) {
         e.preventDefault();
@@ -84,7 +81,10 @@ function TaskList() {
                                     : dispatch(taskSlice.actions.setSelectTask(task))
                             }
                         } id="edit" className="btn btn-warning" to={`/tasks/edit/${task.id}`}><i className="bi bi-pencil-square"/></Link>
-                        <Link id="duplicate" className="btn btn-info" to={`/tasks/add`}><i className="bi bi-files"/></Link>
+                        <Link onClick={(e)=>{
+                                dispatch(taskSlice.actions.setSelectTask(task))
+                            }
+                        } id="duplicate" className="btn btn-info" to={`/tasks/duplicate/${task.id}`}><i className="bi bi-files"/></Link>
                         <Link
                             onClick={(e)=>deleteTaskEvent(e, task.id)}
                             id="delete"

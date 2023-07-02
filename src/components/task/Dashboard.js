@@ -11,11 +11,12 @@ import {
     loadingSelector,
     loginSelector,
     paginationSelector,
+    selectTaskSelector,
     usersSelector,
     userTaskListSelector
 } from "../../redux/selector";
 import {getUserByTeamName} from "../user/userslice";
-import {deleteTaskById, getTasksByUsers} from "./taskSlice";
+import taskSlice, {deleteTaskById, getTasksByUsers} from "./taskSlice";
 import commonSlice from "../common/commonSlice";
 
 function Dashboard() {
@@ -26,6 +27,7 @@ function Dashboard() {
     const users = useSelector(usersSelector);
     const tasks = useSelector(userTaskListSelector);
     const pagination = useSelector(paginationSelector);
+    const selectTask = useSelector(selectTaskSelector);
     
     useEffect(() => {
         if(users.length <= 0) {
@@ -41,7 +43,7 @@ function Dashboard() {
             }));
         }
         dispatch(commonSlice.actions.setCurrentUrl(`/dashboard`));
-    }, [dispatch, tasks]);
+    }, [users, pagination, selectTask, dispatch]);
     function onClickHandle(e, userName) {
         e.preventDefault();
         dispatch(getTasksByUsers({
@@ -112,8 +114,14 @@ function Dashboard() {
                                         </div>
                                     </td>
                                     <td>
-                                        <Link id="edit" className="btn btn-warning" to={`/tasks/edit/${task.id}`}><i className="bi bi-pencil-square"/></Link>
-                                        <Link id="duplicate" className="btn btn-info" to={`/tasks/add`}><i className="bi bi-files"/></Link>
+                                        <Link onClick={
+                                            (e)=>{
+                                                (selectTask && selectTask.id === task.id)
+                                                    ? dispatch(taskSlice.actions.setSelectTask({}))
+                                                    : dispatch(taskSlice.actions.setSelectTask(task))
+                                            }
+                                        } id="edit" className="btn btn-warning" to={`/tasks/edit/${task.id}`}><i className="bi bi-pencil-square"/></Link>
+                                        <Link id="duplicate" className="btn btn-info" to={`/tasks/duplicate/${task.id}`}><i className="bi bi-files"/></Link>
                                         <Link
                                             onClick={(e)=>deleteTaskEvent(e, task.id)}
                                             id="delete"
