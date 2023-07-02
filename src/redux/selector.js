@@ -3,8 +3,8 @@ const currentUrlSelector = state=>state.common.currentUrl;
 const taskListSelector = state=>state.task.taskList;
 const loadingSelector = state=>state.task.loading;
 const selectTaskSelector = state=>state.task.selectTask;
-
 const userTaskListSelector = state=>state.task.userTaskList;
+const paginationSelector = state=>state.task.pagination;
 const usersSelector = state=>state.user.users;
 
 export {
@@ -13,6 +13,7 @@ export {
     taskListSelector,
     loadingSelector,
     selectTaskSelector,
-    usersSelector,
-    userTaskListSelector
+    userTaskListSelector,
+    paginationSelector,
+    usersSelector
 };

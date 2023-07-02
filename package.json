@@ -1,7 +1,7 @@
 {
   "name": "tasks-management",
   "version": "0.1.0",
-  "homepage": "https://phonghoanguit87.github.io/tasks-management",
+  "homepage": "http://localhost:3000/tasks",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.5",

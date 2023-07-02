@@ -1,12 +1,19 @@
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux"
 import {Link} from "react-router-dom";
 
 import Loading from "../common/Loading";
 import Banner from "../common/Banner";
 import ToolBarMenu from "../common/ToolBarMenu";
+import Pagination from "../common/Pagination";
 
-import {taskListSelector, loginSelector, loadingSelector, selectTaskSelector} from "../../redux/selector";
+import {
+    taskListSelector,
+    loginSelector,
+    loadingSelector,
+    selectTaskSelector,
+    paginationSelector
+} from "../../redux/selector";
 import taskSlice, {deleteTaskById, getTasks} from "./taskSlice";
 import commonSlice from "../common/commonSlice";
 
@@ -17,9 +24,13 @@ function TaskList() {
     const userlogined = useSelector(loginSelector);
     const loading = useSelector(loadingSelector);
     const selectTask = useSelector(selectTaskSelector);
+    const pagination = useSelector(paginationSelector);
+    
+    console.log("TaskList > pagination > ", pagination);
     
     useEffect(()=>{
-        dispatch(getTasks(userlogined.loginUser.loginName));
+        console.log("TaskList > useEffect > pagination > ", pagination);
+        dispatch(getTasks({username: userlogined.loginUser.loginName, pagination: pagination}));
         dispatch(commonSlice.actions.setCurrentUrl("/tasks"));
     },[userlogined]);
     
@@ -33,6 +44,7 @@ function TaskList() {
         <ToolBarMenu isList={true}/>
         {loading && <Loading />}
         <hr/>
+        <Pagination/>
         <table className="table">
             <thead>
             <tr>

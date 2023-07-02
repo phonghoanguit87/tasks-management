@@ -5,10 +5,18 @@ import {Link} from "react-router-dom";
 import Banner from "../common/Banner";
 import Loading from "../common/Loading";
 import ToolBarMenu from "../common/ToolBarMenu";
+import Pagination from "../common/Pagination";
 
-import {loadingSelector, loginSelector, usersSelector, userTaskListSelector} from "../../redux/selector";
+import {
+    loadingSelector,
+    loginSelector,
+    paginationSelector,
+    usersSelector,
+    userTaskListSelector
+} from "../../redux/selector";
 import {getUserByTeamName} from "../user/userslice";
 import {deleteTaskById, getTasksByUsers} from "./taskSlice";
+import commonSlice from "../common/commonSlice";
 
 function Dashboard() {
     const dispatch = useDispatch();
@@ -17,6 +25,7 @@ function Dashboard() {
     const userlogined = useSelector(loginSelector);
     const users = useSelector(usersSelector);
     const tasks = useSelector(userTaskListSelector);
+    const pagination = useSelector(paginationSelector);
     
     useEffect(() => {
         if(users.length <= 0) {
@@ -26,15 +35,19 @@ function Dashboard() {
     
     useEffect(() => {
         if(tasks.length <= 0) {
-            console.log("[Dashboard > useEffect > getTasksByUsers] ", users);
-            dispatch(getTasksByUsers(users));
+            dispatch(getTasksByUsers({
+                users: users,
+                pagination: pagination
+            }));
         }
+        dispatch(commonSlice.actions.setCurrentUrl(`/dashboard`));
     }, [dispatch, tasks]);
-    
     function onClickHandle(e, userName) {
         e.preventDefault();
-        console.log("[Dashboard > onClickHandle] ", userName);
-        dispatch(getTasksByUsers(userName));
+        dispatch(getTasksByUsers({
+            users: userName,
+            pagination: pagination
+        }));
     }
     
     function deleteTaskEvent(e, taskId) {
@@ -65,6 +78,8 @@ function Dashboard() {
             <div className="col-9">
                 <div data-bs-spy="scroll" data-bs-target="#navbar-example3" data-bs-smooth-scroll="true" className="scrollspy-example-2" tabIndex="0">
                     <div id={`${userlogined.loginUser.teamName}`}>
+                        <hr/>
+                        <Pagination/>
                         <table className="table">
                             <thead>
                             <tr>
