@@ -37,3 +37,30 @@ This project is a simple task management system. It allows you to create, edit, 
 
 ### Team
 1. View a teams
+
+## Present Content
+- Introduce about project
+- Introduce about Mock API, Deploy site with Vercel
+- Main function:
+  + Task list
+  + Edit user
+  + Add user
+  + Duplicate
+  + Delete user
+  + Export CSV
+- Common function
+  + Pagination
+  + Breadcrumb
+  + ToolBarMenu
+  + Cookies (Login/Logout)
+- Admin user:
+  + Dashboard (list all task of all user)
+  + User list
+  + Add user
+  + Edit user
+  + Delete user
+  + Team detail
+
+- Limit
+  + About feature was not completed
+  + Some problems
