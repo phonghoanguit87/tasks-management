@@ -35,8 +35,9 @@ function Dashboard() {
         }
         
         if(tasks.length <= 0) {
+            const userNames = users.map(user => user.loginName);
             dispatch(getTasksByUsers({
-                users: users,
+                users: userNames,
                 pagination: pagination
             }));
         }

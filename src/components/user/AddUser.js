@@ -1,18 +1,35 @@
-import {PRIORITY_LIST, STATUS_LIST} from "../../config";
-import {DatePicker} from "antd";
+import {useDispatch, useSelector} from "react-redux";
+import {useEffect, useState} from "react";
+
 import Banner from "../common/Banner";
-import {useState} from "react";
-import {addTask} from "../task/taskSlice";
+
+import {selectedUserSelector} from "../../redux/selector";
+import {useNavigate} from "react-router-dom";
+import {addUser} from "./userslice";
 
 function AddUser() {
+    const dispatch = useDispatch();
+    const navigate = useNavigate();;
+    
     const [ form, setForm ] = useState({})
+    const selectedUser = useSelector(selectedUserSelector);
+
+    useEffect(()=> {
+        if (Object.keys(selectedUser).length !== 0) {
+            navigate(`/users`);
+        }
+    },[dispatch, selectedUser])
     
     function addUserEvent(e) {
         e.preventDefault()
+        
+        dispatch(addUser(form));
     }
     
     function cancelEvent(e) {
         e.preventDefault();
+        
+        navigate("/users");
     }
     
     return<>
@@ -44,9 +61,9 @@ function AddUser() {
                     <div className="row me-1"><span>Team Name</span></div>
                     <div className="row me-1">
                         <input
-                            name="name"
+                            name="teamName"
                             className="form-control"
-                            onChange={(e)=>setForm({...form,name:e.target.value})}
+                            onChange={(e)=>setForm({...form,teamName:e.target.value})}
                         />
                     </div>
                 </div>
@@ -71,9 +88,9 @@ function AddUser() {
                     <div className="row me-1"><span>Login Name</span></div>
                     <div className="row me-1">
                         <input
-                            name="name"
+                            name="loginName"
                             className="form-control"
-                            onChange={(e)=>setForm({...form,name:e.target.value})}
+                            onChange={(e)=>setForm({...form,loginName:e.target.value})}
                         />
                     </div>
                 </div>
@@ -81,9 +98,9 @@ function AddUser() {
                     <div className="row me-1"><span>Password</span></div>
                     <div className="row me-1">
                         <input
-                            name="name"
+                            name="password"
                             className="form-control"
-                            onChange={(e)=>setForm({...form,name:e.target.value})}
+                            onChange={(e)=>setForm({...form,password:e.target.value})}
                         />
                     </div>
                 </div>

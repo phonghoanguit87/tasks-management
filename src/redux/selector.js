@@ -6,6 +6,7 @@ const selectTaskSelector = state=>state.task.selectTask;
 const userTaskListSelector = state=>state.task.userTaskList;
 const paginationSelector = state=>state.task.pagination;
 const usersSelector = state=>state.user.users;
+const selectedUserSelector = state=>state.user.selectedUser;
 const teamSelector = state=>state.team.teamInfo;
 
 export {
@@ -17,5 +18,6 @@ export {
     userTaskListSelector,
     paginationSelector,
     usersSelector,
+    selectedUserSelector,
     teamSelector
 };

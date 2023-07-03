@@ -41,20 +41,12 @@ const taskSlice = createSlice({
                 state.taskList = action.payload.data;
                 state.pagination.totalRecord = action.payload.number;
             })
-            .addCase(getTasks.rejected, (state, action) => {
-                state.loading = false
-                toastr.error("The system can not load data!", "Error");
-            })
             .addCase(getTasksById.pending, (state, action) => {
                 state.loading = true;
             })
             .addCase(getTasksById.fulfilled, (state, action) => {
                 state.loading = false;
                 state.selectTask = action.payload;
-            })
-            .addCase(getTasksById.rejected, (state, action) => {
-                state.loading = false
-                toastr.error("The system can not load data!", "Error");
             })
             .addCase(updateTask.pending, (state, action) => {
                 state.loading = true;
@@ -67,10 +59,6 @@ const taskSlice = createSlice({
                     icon: 'success'
                 })
             })
-            .addCase(updateTask.rejected, (state, action) => {
-                state.loading = false
-                toastr.error("The task can not updated!", "Error");
-            })
             .addCase(getTasksByUsers.pending, (state, action) => {
                 state.loading = true;
             })
@@ -78,10 +66,6 @@ const taskSlice = createSlice({
                 state.loading = false;
                 state.userTaskList = action.payload.data;
                 state.pagination.totalRecord = action.payload.number;
-            })
-            .addCase(getTasksByUsers.rejected, (state, action) => {
-                state.loading = false
-                toastr.error("The task can not updated!", "Error");
             })
             .addCase(deleteTaskById.pending, (state, action) => {
                 state.loading = true;
@@ -94,10 +78,6 @@ const taskSlice = createSlice({
                     icon: 'success'
                 });
             })
-            .addCase(deleteTaskById.rejected, (state, action) => {
-                state.loading = false
-                toastr.error("The task can not updated!", "Error");
-            })
             .addCase(addTask.pending, (state, action) => {
                 state.loading = true;
             })
@@ -109,10 +89,16 @@ const taskSlice = createSlice({
                     icon: 'success'
                 })
             })
-            .addCase(addTask.rejected, (state, action) => {
-                state.loading = false
-                toastr.error("The task can not added!", "Error");
-            })
+            .addMatcher(
+                (action) =>
+                    [getTasks.rejected, getTasksById.rejected, updateTask.rejected, getTasksByUsers.rejected, deleteTaskById.rejected, addTask.rejected].includes(
+                        action.type
+                    ),
+                (state, action) => {
+                    state.loading = false;
+                    toastr.error("The system can not load data!", "Error");
+                }
+            )
     }
 });
 
@@ -192,7 +178,7 @@ const addTask = createAsyncThunk(
     async (taskData) => {
         const url = `${config.apiURL}/tasks`;
         const res = await axios.post(url, taskData);
-        
+
         return res.data;
     }
 );

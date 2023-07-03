@@ -32,7 +32,6 @@ function TaskList() {
     },[userlogined, selectTask, pagination, dispatch]);
     
     function deleteTaskEvent(e, taskId) {
-        e.preventDefault();
         dispatch(deleteTaskById(taskId));
     }
     

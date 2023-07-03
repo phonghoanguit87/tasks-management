@@ -70,9 +70,6 @@ function Login() {
                     }}
                 >Login</button>
             </form>
-            <div className="text-center fs-6">
-                <a href="#">Forget password?</a> or <a href="#">Sign up</a>
-            </div>
         </div>
     );
 }

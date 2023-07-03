@@ -13,7 +13,7 @@ function TeamDetail () {
     
     const loading = useSelector(loadingSelector);
     const team = useSelector(teamSelector);
-    
+
     useEffect(() => {
         dispatch(getTeamDetail());
     }, [dispatch, team]);
@@ -23,7 +23,7 @@ function TeamDetail () {
         {loading && <Loading />}
         <ToolBarMenu isTeamDetail={true} isLeader={true} />
         <hr/>
-        
+
         <div className="main mt-5">
             <div className="row mt-2">
                 <div className="col-2">
