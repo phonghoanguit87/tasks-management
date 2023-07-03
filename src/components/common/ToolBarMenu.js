@@ -107,7 +107,7 @@ function ToolBarMenu(props) {
         e.preventDefault();
         dispatch(deleteTaskById(taskId));
     }
-    
+
     return <>
         <div className="row">
             <div className="col-6">
@@ -129,6 +129,7 @@ function ToolBarMenu(props) {
                     {isList && ((isLeader && tasks.length > 0) || (!isLeader && taskList.length > 0)) ? (
                         <CSVLink
                             data={isLeader ? formatCSVData(tasks) : formatCSVData(taskList)}
+                            filename={"task-list.csv"}
                             separator={";"}
                             className="btn btn-secondary me-1"
                         >

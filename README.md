@@ -3,6 +3,11 @@
 ## Description
 This project is a simple task management system. It allows you to create, edit, delete and view tasks. 
 
+## Deploy link
+[API Server](https://my-json-server.typicode.com/phonghoanguit87/fake-api-demo)
+
+[Tasks Management](https://tasks-management-ib0hvup43-phonghoanguit87.vercel.app/tasks)
+
 ## Installation
 
 ### Requirements

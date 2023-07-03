@@ -30,8 +30,9 @@ function Dashboard() {
     const selectTask = useSelector(selectTaskSelector);
     
     useEffect(() => {
+        console.log("Dashboard useEffect users length: ", users.length);
         if(users.length <= 0) {
-            dispatch(getUserByTeamName());
+            dispatch(getUserByTeamName(userlogined.loginUser.teamName));
         }
         
         if(tasks.length <= 0) {
@@ -41,7 +42,7 @@ function Dashboard() {
             }));
         }
         dispatch(commonSlice.actions.setCurrentUrl(`/dashboard`));
-    }, [dispatch]);
+    }, [dispatch, users]);
     
     function onClickHandle(e, userName) {
         e.preventDefault();

@@ -51,12 +51,17 @@ export function clearCookie(cname) {
 }
 
 export function formatCSVData(data) {
-  let csvData = '';
-  const keys = Object.keys(data[0]);
+  const tasksWithoutTodo = data.map((task) => {
+    const { todo, ...taskWithoutTodo } = task;
+    
+    return taskWithoutTodo;
+  });
   
+  let csvData = '';
+  const keys = Object.keys(tasksWithoutTodo[0]);
   csvData += keys.join(',') + '\n';
   
-  data.forEach((element) => {
+  tasksWithoutTodo.forEach((element) => {
     let row = '';
     
     keys.forEach((key) => {
