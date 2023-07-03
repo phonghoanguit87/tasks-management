@@ -31,11 +31,9 @@ function Dashboard() {
     
     useEffect(() => {
         if(users.length <= 0) {
-            dispatch(getUserByTeamName(userlogined.loginUser.teamName));
+            dispatch(getUserByTeamName());
         }
-    }, [dispatch, users]);
-    
-    useEffect(() => {
+        
         if(tasks.length <= 0) {
             dispatch(getTasksByUsers({
                 users: users,
@@ -43,7 +41,8 @@ function Dashboard() {
             }));
         }
         dispatch(commonSlice.actions.setCurrentUrl(`/dashboard`));
-    }, [users, pagination, selectTask, dispatch]);
+    }, [dispatch]);
+    
     function onClickHandle(e, userName) {
         e.preventDefault();
         dispatch(getTasksByUsers({
