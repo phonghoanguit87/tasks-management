@@ -1,9 +1,11 @@
+import {useDispatch, useSelector} from "react-redux";
+import {useEffect} from "react";
+
 import Banner from "../common/Banner";
 import Loading from "../common/Loading";
 import ToolBarMenu from "../common/ToolBarMenu";
-import {useDispatch, useSelector} from "react-redux";
+
 import {loadingSelector, teamSelector} from "../../redux/selector";
-import {useEffect} from "react";
 import {getTeamDetail} from "./teamSlice";
 
 function TeamDetail () {

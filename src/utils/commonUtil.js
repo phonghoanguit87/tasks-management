@@ -19,7 +19,6 @@ export function getPriority(priority = null) {
 }
 
 export  function setCookie(cname, value, expDays = 7) {
-  console.log("setCookie > name -->", value);
   const currentDate = new Date();
   currentDate.setTime(currentDate.getTime() + (expDays * 24 * 60 * 60 * 1000));
   let expires = "expires=" + currentDate.toUTCString();

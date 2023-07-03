@@ -40,7 +40,6 @@ function DuplicateTask() {
         setForm(newForm)
         
         if (task.id !== undefined && task.id !== Number(taskId)) {
-            console.log("task.id !== taskId",typeof task.id, typeof taskId)
             navigate(`/tasks/detail/${task.id}`);
         }
     },[dispatch, task])

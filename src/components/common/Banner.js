@@ -18,7 +18,6 @@ function Banner() {
     }
     
     function logoutOnClick(e) {
-        console.log("logoutOnClick");
         e.preventDefault();
         clearCookie("user");
         dispatch(commonSlice.actions.setLoginInfo({

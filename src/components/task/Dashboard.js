@@ -30,7 +30,6 @@ function Dashboard() {
     const selectTask = useSelector(selectTaskSelector);
     
     useEffect(() => {
-        console.log("Dashboard useEffect users length: ", users.length);
         if(users.length <= 0) {
             dispatch(getUserByTeamName(userlogined.loginUser.teamName));
         }

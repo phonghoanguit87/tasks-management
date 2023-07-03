@@ -192,7 +192,6 @@ const addTask = createAsyncThunk(
     async (taskData) => {
         const url = `${config.apiURL}/tasks`;
         const res = await axios.post(url, taskData);
-        console.log("taskSlice > addTask > res.data", res.data)
         
         return res.data;
     }

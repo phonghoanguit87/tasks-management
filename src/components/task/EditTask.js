@@ -54,8 +54,6 @@ function EditTask() {
             ...form,
             [e.target.name]:e.target.value
         });
-        
-        console.log("EditTask > Form > onChange > ", form);
     }
     
     function submitBook(e) {
