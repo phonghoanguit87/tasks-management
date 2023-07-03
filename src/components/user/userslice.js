@@ -56,5 +56,5 @@ const addUser = createAsyncThunk(
     }
 );
 
-export {getUserByTeamName};
+export {getUserByTeamName, addUser};
 export default userSlice;

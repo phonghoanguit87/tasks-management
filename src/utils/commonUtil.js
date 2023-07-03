@@ -72,8 +72,12 @@ export function formatCSVData(data) {
 export function getCurrentDate() {
   const currentDate = new Date();
   const date = currentDate.getDate();
-  const month = currentDate.getMonth();
+  const month = currentDate.getMonth() + 1;
   const year = currentDate.getFullYear();
   
-  return `${year}/${month}/${date}`;
+  const formattedDate = String(date).padStart(2, '0');
+  const formattedMonth = String(month).padStart(2, '0');
+  
+  return `${year}/${formattedMonth}/${formattedDate}`;
 }
+

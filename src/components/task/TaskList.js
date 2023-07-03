@@ -51,6 +51,8 @@ function TaskList() {
                 <th>Assign To</th>
                 <th>Priority</th>
                 <th>Status</th>
+                <th>Start</th>
+                <th>DeadLine</th>
                 <th></th>
             </tr>
             </thead>
@@ -58,7 +60,13 @@ function TaskList() {
             {taskList.map(task=>(
                 <tr key={task.id} data-testid={`task-${task.id}`}>
                     <td>
-                        <Link id="detail" className="btn btn-info" to={`/tasks/detail/${task.id}`}><i className="bi bi-file"/></Link>
+                        <Link onClick={
+                            (e)=>{
+                                if(Object.keys(selectTask).length === 0 || selectTask.id !== Number(task.id)) {
+                                    dispatch(taskSlice.actions.setSelectTask(task))
+                                }
+                            }
+                        } id="detail" className="btn btn-info" to={`/tasks/detail/${task.id}`}><i className="bi bi-file"/></Link>
                     </td>
                     <td className="align-middle">{task.id}</td>
                     <td className="align-middle">{task.taskTitle}</td>
@@ -73,16 +81,21 @@ function TaskList() {
                             {task.status}
                         </div>
                     </td>
+                    <td className="align-middle">{task.start}</td>
+                    <td className="align-middle">{task.deadline}</td>
+                    
                     <td>
                         <Link onClick={
                             (e)=>{
-                                (selectTask && selectTask.id === task.id)
-                                    ? dispatch(taskSlice.actions.setSelectTask({}))
-                                    : dispatch(taskSlice.actions.setSelectTask(task))
+                                if(Object.keys(selectTask).length === 0 || selectTask.id !== Number(task.id)) {
+                                    dispatch(taskSlice.actions.setSelectTask(task))
+                                }
                             }
                         } id="edit" className="btn btn-warning" to={`/tasks/edit/${task.id}`}><i className="bi bi-pencil-square"/></Link>
-                        <Link onClick={(e)=>{
-                                dispatch(taskSlice.actions.setSelectTask(task))
+                        <Link onClick={(e)=> {
+                                if(Object.keys(selectTask).length === 0 || selectTask.id !== Number(task.id)) {
+                                    dispatch(taskSlice.actions.setSelectTask(task))
+                                }
                             }
                         } id="duplicate" className="btn btn-info" to={`/tasks/duplicate/${task.id}`}><i className="bi bi-files"/></Link>
                         <Link

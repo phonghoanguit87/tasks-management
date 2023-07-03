@@ -1,6 +1,11 @@
 {
   "teams": [
-    { "id": 1, "teamName": "development", "createBy": "phonghoang" }
+    {
+      "id": 1,
+      "teamName": "development",
+      "description": "The team will be implement project from customer.",
+      "createBy": "phonghoang"
+    }
   ],
   "users": [
     {

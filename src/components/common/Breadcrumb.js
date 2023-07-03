@@ -16,9 +16,9 @@ function Breadcrumb(props) {
                 {
                     crumbs && crumbs.map((crumb, index) => {
                         if(index === indexOfLastCrumbs)
-                            return <li className="breadcrumb-item active" aria-current="page">{crumb.title}</li>
+                            return <li key={index} className="breadcrumb-item active" aria-current="page">{crumb.title}</li>
                         
-                        return <li className="breadcrumb-item"><Link to={crumb.path}>{crumb.title}</Link></li>
+                        return <li key={index} className="breadcrumb-item"><Link to={crumb.path}>{crumb.title}</Link></li>
                     })
                 }
             </ol>

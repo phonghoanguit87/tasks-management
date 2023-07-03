@@ -11,7 +11,7 @@ import {
     loadingSelector,
     selectTaskSelector
 } from "../../redux/selector";
-import taskSlice, {addTask, getTasksById} from "./taskSlice";
+import {addTask, getTasksById} from "./taskSlice";
 import {STATUS_LIST, PRIORITY_LIST} from "../../config";
 
 /**
@@ -54,14 +54,19 @@ function DuplicateTask() {
         const month = date.month() + 1;
         const day = date.date();
         
-        handleChange(pickerName,`${year}/${month}/${day}`);
-    };
-    function handleChange(name, value) {
         setForm({
             ...form,
-            [name]: value
+            [pickerName]: `${year}/${month}/${day}`
         });
+    };
+    
+    function handleChange(e) {
+        setForm({
+            ...form,
+            [e.target.name]:e.target.value
+        })
     }
+    
     function addTaskEvent(e) {
         e.preventDefault()
         
@@ -91,7 +96,7 @@ function DuplicateTask() {
                             name="taskTitle"
                             value={form.taskTitle}
                             className="form-control"
-                            onChange={(e) => setForm({...form, taskTitle: e.target.value})}
+                            onChange={handleChange}
                         />
                     </div>
                 </div>
@@ -103,7 +108,7 @@ function DuplicateTask() {
                     <div className="row me-1">
                         <input
                             name="assignTo"
-                            onChange={(e) => setForm({...form, assignTo: e.target.value})}
+                            onChange={handleChange}
                             value={form.assignTo}
                             className="form-control"
                         />
@@ -114,10 +119,10 @@ function DuplicateTask() {
                     <div className="row me-1">
                         <select
                             name="priority"
-                            onChange={(e) => setForm({...form, priority: e.target.value})}
+                            onChange={handleChange}
                             className="form-select"
                             id="priority"
-                            defaultValue={task.priority}
+                            defaultValue={form.priority}
                         >
                             {
                                 PRIORITY_LIST.map((value, index) => {
@@ -132,10 +137,10 @@ function DuplicateTask() {
                     <div className="row me-1">
                         <select
                             name="status"
-                            onChange={(e) => setForm({...form, status: e.target.value})}
+                            onChange={handleChange}
                             className="form-select"
                             id="status"
-                            defaultValue={task.status}
+                            defaultValue={form.status}
                         >
                             {
                                 STATUS_LIST.map((value, index) => {
@@ -177,8 +182,9 @@ function DuplicateTask() {
                 <div className="row"><span>Content</span></div>
                 <div className="row">
                     <textarea
-                        onChange={(e) => setForm({...form, content: e.target.value})}
-                        value={task.content}
+                        name="content"
+                        onChange={handleChange}
+                        value={form.content}
                         className="form-control"
                         rows="10"
                     />
@@ -199,7 +205,7 @@ function DuplicateTask() {
                             </tr>
                         </thead>
                         <tbody>
-                        {task.todo && task.todo.map((todo) => (
+                        {form.todo && form.todo.map((todo) => (
                             <tr key={todo.id}>
                                 <td>
                                     <input value={todo.id} className="form-control"/>

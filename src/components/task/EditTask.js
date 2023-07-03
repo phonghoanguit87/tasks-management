@@ -1,49 +1,47 @@
 import {useEffect, useState} from "react";
 import {useNavigate, useParams} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
-import DatePicker from 'react-datepicker';
+import { DatePicker } from 'antd';
+import dayjs from 'dayjs';
 
 import Banner from "../common/Banner";
 import Loading from "../common/Loading";
 
 import {getTasksById, updateTask} from "./taskSlice";
 import {currentUrlSelector, loadingSelector, selectTaskSelector} from "../../redux/selector";
-import {getPriority, getStatus} from "../../utils/commonUtil";
+import {STATUS_LIST, PRIORITY_LIST, DATE_FORMAT} from "../../config";
+import {getCurrentDate} from "../../utils/commonUtil";
 
 function EditTask() {
-    let { taskId } = useParams();
     const dispatch = useDispatch()
     const navigate = useNavigate();
+    
+    let { taskId } = useParams();
     const task = useSelector(selectTaskSelector);
     const loading = useSelector(loadingSelector);
     const currentUrl = useSelector(currentUrlSelector);
+    const [ form, setForm ] = useState(task);
+    let currentDate = getCurrentDate();
 
-    let priorities = [];
-    let statuses = [];
-    
     useEffect(() => {
-        dispatch(getTasksById(taskId));
-    }, [dispatch, taskId]);
+        if (Object.keys(task).length === 0 || task.id !== Number(taskId)) {
+            dispatch(getTasksById(taskId));
+        }
+        
+        setForm(task)
+    }, [dispatch, taskId, task]);
     
-    if (task.id) {
-        priorities = getPriority(task.priority);
-        statuses = getStatus(task.status);
-    }
-    const [startDate, setStartDate] = useState(task.start);
-    const [deadlineDate, setDeadlineDate] = useState(task.deadline);
-    const handleStartDateChange = (date) => {
-        setStartDate(date);
+    const handleDatePickerChange = (date, dateString, pickerName) => {
+        const year = date.year();
+        const month = date.month() + 1;
+        const day = date.date();
+        
+        setForm({
+            ...form,
+            [pickerName]: `${year}/${month}/${day}`
+        });
     };
     
-    const handleDeadlineDateChange = (date) => {
-        setDeadlineDate(date);
-    };
-    
-    const handleWorkDateChange = (date) => {
-        setDeadlineDate(date);
-    };
-    
-    const [ form, setForm ] = useState(task)
     function cancelEvent(e) {
         e.preventDefault();
         navigate(`${currentUrl}`);
@@ -51,12 +49,13 @@ function EditTask() {
     
     function handleChange(e) {
         e.preventDefault();
-        const { name, value } = e.target;
         
         setForm({
             ...form,
-            [name]: value
+            [e.target.name]:e.target.value
         });
+        
+        console.log("EditTask > Form > onChange > ", form);
     }
     
     function submitBook(e) {
@@ -85,7 +84,7 @@ function EditTask() {
                 <div className="col-10">
                     <div className="row me-1"><span>Title</span></div>
                     <div className="row me-1">
-                        <input name="taskTitle" value={form.taskTitle} className="form-control" onChange={(e)=> handleChange(e)}/>
+                        <input name="taskTitle" value={form.taskTitle} className="form-control" onChange={handleChange}/>
                     </div>
                 </div>
             </div>
@@ -94,16 +93,21 @@ function EditTask() {
                 <div className="col-2">
                     <div className="row me-1"><span>Assign to</span></div>
                     <div className="row me-1">
-                        <input name="assignTo" value={form.assignTo} className="form-control" onChange={(e)=> handleChange(e)}/>
+                        <input name="assignTo" value={form.assignTo} className="form-control" onChange={handleChange}/>
                     </div>
                 </div>
                 <div className="col-2">
                     <div className="row me-1"><span>Priority</span></div>
                     <div className="row me-1">
-                        <select className="form-select" id="priority">
-                            <option selected>{task.priority}</option>
+                        <select
+                            defaultValue={form.priority}
+                            className="form-select"
+                            id="priority"
+                            name="priority"
+                            onChange={handleChange}
+                        >
                             {
-                                priorities.map((value, index) => {
+                                PRIORITY_LIST.map((value, index) => {
                                     return <option key={index} value={value}>{value}</option>
                                 })
                             }
@@ -113,10 +117,15 @@ function EditTask() {
                 <div className="col-2">
                     <div className="row me-1"><span>Status</span></div>
                     <div className="row me-1">
-                        <select className="form-select" id="status">
-                            <option selected>{task.status}</option>
+                        <select
+                            defaultValue={form.status}
+                            className="form-select"
+                            id="status"
+                            name="status"
+                            onChange={handleChange}
+                        >
                             {
-                                statuses.map((value, index) => {
+                                STATUS_LIST.map((value, index) => {
                                     return <option key={index} value={value}>{value}</option>
                                 })
                             }
@@ -126,14 +135,21 @@ function EditTask() {
                 <div className="col-3">
                     <div className="row me-1"><span>Start</span></div>
                     <div className="row me-1">
-                        {startDate === undefined ? ("") : (
+                        {form.start !== undefined && form.start !== null ? (
                             <DatePicker
                                 id="startDate"
                                 className="form-control"
-                                selected={new Date(startDate)}
-                                onChange={handleStartDateChange}
-                                dateFormat="yyyy/mm/dd"
-                                placeholderText="Select a date"
+                                defaultValue={dayjs(form.start, DATE_FORMAT)}
+                                onChange={(date, dateString) => handleDatePickerChange(date, dateString, "start")}
+                                format={DATE_FORMAT}
+                            />
+                        ) : (
+                                <DatePicker
+                                id="startDate"
+                                className="form-control"
+                                defaultValue={dayjs(currentDate, DATE_FORMAT)}
+                                onChange={(date, dateString) => handleDatePickerChange(date, dateString, "start")}
+                                format={DATE_FORMAT}
                             />
                         )}
                     </div>
@@ -141,15 +157,22 @@ function EditTask() {
                 <div className="col-3">
                     <div className="row me-1"><span>Deadline</span></div>
                     <div className="row me-1">
-                        {deadlineDate === undefined ? ("") : (
-                            <DatePicker
-                                id="deadlineDate"
-                                className="form-control"
-                                selected={new Date(deadlineDate)}
-                                onChange={handleDeadlineDateChange}
-                                dateFormat="yyyy/mm/dd"
-                                placeholderText="Select a date"
-                            />
+                        {form.deadline !== undefined && form.deadline !== null ? (
+                                <DatePicker
+                                    id="deadlineDate"
+                                    className="form-control"
+                                    defaultValue={dayjs(form.deadline, DATE_FORMAT)}
+                                    onChange={(date, dateString) => handleDatePickerChange(date, dateString, "deadline")}
+                                    format={DATE_FORMAT}
+                                />
+                        ) : (
+                                <DatePicker
+                                    id="deadlineDate"
+                                    className="form-control"
+                                    defaultValue={dayjs(currentDate, DATE_FORMAT)}
+                                    onChange={(date, dateString) => handleDatePickerChange(date, dateString, "deadline")}
+                                    format={DATE_FORMAT}
+                                />
                         )}
                     </div>
                 </div>
@@ -158,7 +181,13 @@ function EditTask() {
             <div className="row mt-3">
                 <div className="row"><span>Content</span></div>
                 <div className="row">
-                    <textarea name="content" value={task.content} className="form-control" rows="10" onChange={(e)=> handleChange(e)}></textarea>
+                    <textarea
+                        name="content"
+                        value={form.content}
+                        className="form-control"
+                        rows="10"
+                        onChange={handleChange}>
+                    </textarea>
                 </div>
             </div>
             
@@ -175,7 +204,7 @@ function EditTask() {
                         </tr>
                         </thead>
                         <tbody>
-                        {task.todo && task.todo.map((todo)=>(
+                        {form.todo && form.todo.map((todo)=>(
                             <tr key={todo.id}>
                                 <td>
                                     <input value={todo.id} className="form-control"/>
@@ -184,25 +213,32 @@ function EditTask() {
                                     <input value={todo.todoTitle} className="form-control"/>
                                 </td>
                                 <td>
-                                    <select className="form-select" id="todoStatus">
+                                    <select defaultValue={todo.status} className="form-select" id="todoStatus">
                                         {
-                                            statuses.map((value, index) => {
-                                                if(value === todo.status)
-                                                    return <option selected key={index} value={value}>{value}</option>
+                                            STATUS_LIST.map((value, index) => {
                                                 return <option key={index} value={value}>{value}</option>
                                             })
                                         }
                                     </select>
                                 </td>
                                 <td>
-                                    <DatePicker
-                                        id="workDate"
-                                        className="form-control"
-                                        selected={new Date(todo.workDate)}
-                                        onChange={handleDeadlineDateChange}
-                                        dateFormat="yyyy/mm/dd"
-                                        placeholderText="Select a date"
-                                    />
+                                    {todo.workDate !== undefined && todo.workDate !== null ? (
+                                            <DatePicker
+                                                id="workDate"
+                                                className="form-control"
+                                                defaultValue={dayjs(todo.workDate, DATE_FORMAT)}
+                                                onChange={(date, dateString) => handleDatePickerChange(date, dateString, "workDate")}
+                                                format={DATE_FORMAT}
+                                            />
+                                    ) : (
+                                            <DatePicker
+                                                id="workDate"
+                                                className="form-control"
+                                                defaultValue={dayjs(currentDate, DATE_FORMAT)}
+                                                onChange={(date, dateString) => handleDatePickerChange(date, dateString, "workDate")}
+                                                format={DATE_FORMAT}
+                                            />
+                                    )}
                                 </td>
                             </tr>
                         ))}

@@ -6,7 +6,7 @@ import toastr from "toastr";
 const teamSlice = createSlice({
     name:"team",
     initialState: {
-        team: {}
+        teamInfo: {}
     },
     reducers: {},
     extraReducers: (builder) => {
@@ -16,7 +16,7 @@ const teamSlice = createSlice({
             })
             .addCase(getTeamDetail.fulfilled, (state, action) => {
                 state.loading = false;
-                state.team = action.payload;
+                state.teamInfo = action.payload;
             })
             .addCase(getTeamDetail.rejected, (state, action) => {
                 state.loading = false
@@ -27,8 +27,8 @@ const teamSlice = createSlice({
 
 const getTeamDetail = createAsyncThunk(
     "team/getTeamDetail",
-    async (teamName) => {
-        const url = `${config.apiURL}/teams?teamName=${teamName}`;
+    async () => {
+        const url = `${config.apiURL}/teams`;
         const res = await axios.get(url);
         
         return res.data[0];
@@ -36,4 +36,5 @@ const getTeamDetail = createAsyncThunk(
 );
 
 export {getTeamDetail};
+
 export default teamSlice;

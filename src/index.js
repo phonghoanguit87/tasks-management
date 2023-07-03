@@ -9,7 +9,6 @@ import App from './App';
 import './index.css';
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
-import 'react-datepicker/dist/react-datepicker.css';
 import "../src/css/common.css";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));

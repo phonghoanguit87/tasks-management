@@ -37,7 +37,18 @@ function ToolBarMenu(props) {
     
     useEffect(()=>{
         if(selectTask.id === undefined) {
-            navigate(`/tasks`);
+            if(props.isLeader) {
+                if(props.isUserList) {
+                    navigate(`/users`);
+                } else if (props.isTeamDetail) {
+                    navigate(`/team`);
+                } else {
+                    navigate(`/dashboard`);
+                }
+                
+            } else {
+                navigate(`/tasks`);
+            }
         }
     },[dispatch, selectTask]);
     
@@ -79,6 +90,12 @@ function ToolBarMenu(props) {
         }
     }
     
+    if(props.isUserList || props.isTeamDetail) {
+        isUp = false;
+        isDown = false;
+        isAdd = false;
+    }
+    
     if(props.isLeader) {
         isLeader = props.isLeader;
     }
@@ -102,6 +119,12 @@ function ToolBarMenu(props) {
                 <div className="d-flex flex-row-reverse bd-highlight mt-4">
                     {userlogined.isLeader ? (
                         <Link id="leader" to={"/dashboard"} className="btn btn-dark me-1"><i className="bi bi-gear"/></Link>
+                    ) : ("")}
+                    {userlogined.isLeader ? (
+                        <Link id="member" to={"/users"} className="btn btn-dark me-1"><i className="bi bi-people-fill"/></Link>
+                    ) : ("")}
+                    {userlogined.isLeader ? (
+                        <Link id="member" to={"/team"} className="btn btn-dark me-1"><i className="bi bi-microsoft-teams"/></Link>
                     ) : ("")}
                     {isList && ((isLeader && tasks.length > 0) || (!isLeader && taskList.length > 0)) ? (
                         <CSVLink

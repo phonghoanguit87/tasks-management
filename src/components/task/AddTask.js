@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {useNavigate, useParams} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import { DatePicker } from 'antd';
 
 import Banner from "../common/Banner";
@@ -25,15 +25,15 @@ function AddTask() {
     
     const dateFormat = 'YYYY/MM/DD';
     const [ task, setTask ] = useState({})
-    const [ type, setType ] = useState("New")
+    const [ isNavigate, setIsNavigate ] = useState("Yes")
 
     useEffect(()=>{
         if (Object.keys(selectTask).length !== 0) {
             setTask(selectTask)
-            setType("Duplicate");
+            setIsNavigate("No");
         }
         
-        if (Object.keys(selectTask).length !== 0 && type === "New") {
+        if (Object.keys(selectTask).length !== 0 && isNavigate === "Yes") {
             navigate(`/tasks/detail/${selectTask.id}`);
         }
     },[dispatch, selectTask])
@@ -81,21 +81,11 @@ function AddTask() {
                 <div className="col-10">
                     <div className="row me-1"><span>Title</span></div>
                     <div className="row me-1">
-                        {type === "Duplicate" ? (
-                            <input
-                                name="taskTitle"
-                                value={form.taskTitle}
-                                className="form-control"
-                                onChange={(e)=>setForm({...form,taskTitle:e.target.value})}
-                            />
-                        
-                        ) : (
-                            <input
-                                name="taskTitle"
-                                className="form-control"
-                                onChange={(e)=>setForm({...form,taskTitle:e.target.value})}
-                            />
-                        )}
+                        <input
+                            name="taskTitle"
+                            className="form-control"
+                            onChange={(e)=>setForm({...form,taskTitle:e.target.value})}
+                        />
                     </div>
                 </div>
             </div>
@@ -104,136 +94,72 @@ function AddTask() {
                 <div className="col-2">
                     <div className="row me-1"><span>Assign to</span></div>
                     <div className="row me-1">
-                        {type === "Duplicate" ? (
-                            <input
-                                name="assignTo"
-                                onChange={(e)=>setForm({...form,assignTo:e.target.value})}
-                                value={form.assignTo}
-                                className="form-control"
-                            />
-                        ) : (
-                            <input
-                                name="assignTo"
-                                onChange={(e)=>setForm({...form,assignTo:e.target.value})}
-                                className="form-control"
-                            />
-                        )}
+                        <input
+                            name="assignTo"
+                            onChange={(e)=>setForm({...form,assignTo:e.target.value})}
+                            className="form-control"
+                        />
                     </div>
                 </div>
                 <div className="col-2">
                     <div className="row me-1"><span>Priority</span></div>
                     <div className="row me-1">
-                        {type === "Duplicate" ? (
-                            <select
-                                name="priority"
-                                onChange={(e)=>setForm({...form,priority:e.target.value})}
-                                className="form-select"
-                                id="priority"
-                                defaultValue={task.priority}
-                            >
-                                {
-                                    PRIORITY_LIST.map((value, index) => {
-                                        return <option key={index} value={value}>{value}</option>
-                                    })
-                                }
-                            </select>
-                        ) : (
-                            <select
-                                name="priority"
-                                onChange={(e)=>setForm({...form,priority:e.target.value})}
-                                className="form-select"
-                                id="priority"
-                                defaultValue={PRIORITY_LIST[0]}
-                            >
-                                {
-                                    PRIORITY_LIST.map((value, index) => {
-                                        return <option key={index} value={value}>{value}</option>
-                                    })
-                                }
-                            </select>
-                        )}
+                        <select
+                            name="priority"
+                            onChange={(e) => setForm({...form, priority: e.target.value})}
+                            className="form-select"
+                            id="priority"
+                            defaultValue={PRIORITY_LIST[0]}
+                        >
+                            {
+                                PRIORITY_LIST.map((value, index) => {
+                                    return <option key={index} value={value}>{value}</option>
+                                })
+                            }
+                        </select>
                     </div>
                 </div>
                 <div className="col-2">
                     <div className="row me-1"><span>Status</span></div>
                     <div className="row me-1">
-                        {type === "Duplicate" ? (
-                            <select
-                                name="status"
-                                onChange={(e)=>setForm({...form,status:e.target.value})}
-                                className="form-select"
-                                id="status"
-                                defaultValue={task.status}
-                            >
-                                {
-                                    STATUS_LIST.map((value, index) => {
-                                        return <option key={index} value={value}>{value}</option>
-                                    })
-                                }
-                            </select>
-                        ):(
-                            <select
-                                name="status"
-                                onChange={(e)=>setForm({...form,status:e.target.value})}                                className="form-select"
-                                id="status"
-                                defaultValue={STATUS_LIST[0]}
-                            >
-                                {
-                                    STATUS_LIST.map((value, index) => {
-                                        return <option key={index} value={value}>{value}</option>
-                                    })
-                                }
-                            </select>
-                        )}
-
+                        <select
+                            name="status"
+                            onChange={(e) => setForm({...form, status: e.target.value})} className="form-select"
+                            id="status"
+                            defaultValue={STATUS_LIST[0]}
+                        >
+                            {
+                                STATUS_LIST.map((value, index) => {
+                                    return <option key={index} value={value}>{value}</option>
+                                })
+                            }
+                        </select>
                     </div>
                 </div>
                 <div className="col-3">
                     <div className="row me-1"><span>Start</span></div>
                     <div className="row me-1">
-                        {type === "Duplicate" ? (
-                            <DatePicker
-                                id="startDate"
-                                className="form-control"
-                                // defaultValue={form.start}
-                                onChange={(date, dateString) => handleDatePickerChange(date, dateString, "start")}
-                                dateFormat={dateFormat}
-                                placeholderText="Select a date"
-                            />
-                        ) : (
-                            <DatePicker
-                                id="startDate"
-                                className="form-control"
-                                // defaultValue={moment().format(dateFormat)}
-                                onChange={(date, dateString) => handleDatePickerChange(date, dateString, "start")}
-                                dateFormat={dateFormat}
-                                placeholderText="Select a date"
-                            />
-                        )}
+                        <DatePicker
+                            id="startDate"
+                            className="form-control"
+                            // defaultValue={moment().format(dateFormat)}
+                            onChange={(date, dateString) => handleDatePickerChange(date, dateString, "start")}
+                            dateFormat={dateFormat}
+                            placeholderText="Select a date"
+                        />
                     </div>
                 </div>
                 <div className="col-3">
                     <div className="row me-1"><span>Deadline</span></div>
                     <div className="row me-1">
-                        {type === "Duplicate" ? (
-                            <DatePicker
-                                id="deadlineDate"
-                                className="form-control"
-                                // defaultValue={form.deadline}
-                                onChange={(date, dateString) => handleDatePickerChange(date, dateString, "deadline")}
-                                dateFormat={dateFormat}
-                                placeholderText="Select a date"
-                            />
-                        ) : (
-                            <DatePicker
-                                id="deadlineDate"
-                                className="form-control"
-                                // defaultValue={moment().format(dateFormat)}
-                                onChange={(date, dateString) => handleDatePickerChange(date, dateString, "deadline")}
-                                dateFormat={dateFormat}
-                                placeholderText="Select a date"
-                            />
-                        )}
+                        <DatePicker
+                            id="deadlineDate"
+                            className="form-control"
+                            // defaultValue={moment().format(dateFormat)}
+                            onChange={(date, dateString) => handleDatePickerChange(date, dateString, "deadline")}
+                            dateFormat={dateFormat}
+                            placeholderText="Select a date"
+                        />
                     </div>
                 </div>
             </div>
@@ -241,18 +167,10 @@ function AddTask() {
             <div className="row mt-3">
                 <div className="row"><span>Content</span></div>
                 <div className="row">
-                    {type === "Duplicate" ? (
-                        <textarea
-                            onChange={(e)=>setForm({...form,content:e.target.value})}
-                            value={task.content}
-                            className="form-control"
-                            rows="10"/>
-                    ) : (
-                        <textarea
-                            onChange={(e)=>setForm({...form,content:e.target.value})}
-                            className="form-control"
-                            rows="10"/>
-                    )}
+                    <textarea
+                        onChange={(e)=>setForm({...form,content:e.target.value})}
+                        className="form-control"
+                        rows="10"/>
                 </div>
             </div>
             
@@ -269,72 +187,38 @@ function AddTask() {
                             <th></th>
                         </tr>
                         </thead>
-                        {type === "Duplicate" ? (
-                            <tbody>
-                            {task.todo.map((todo)=>(
-                                <tr key={todo.id}>
-                                    <td>
-                                        <input value={todo.id} className="form-control"/>
-                                    </td>
-                                    <td>
-                                        <input value={todo.todoTitle} className="form-control"/>
-                                    </td>
-                                    <td>
-                                        <select defaultValue={todo.status} className="form-select" id="todoStatus">
-                                            {
-                                                STATUS_LIST.map((value, index) => {
-                                                    return <option key={index} value={value}>{value}</option>
-                                                })
-                                            }
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <DatePicker
-                                            id="workDate"
-                                            className="form-control"
-                                            // defaultValue={new Date(todo.workDate)}
-                                            onChange={(date, dateString) => handleChange("start", dateString)}
-                                            dateFormat={dateFormat}
-                                            placeholderText="Select a date"
-                                        />
-                                    </td>
-                                </tr>
-                            ))}
-                            </tbody>
-                        ) : (
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        <input value="" className="form-control"/>
-                                    </td>
-                                    <td>
-                                        <input value="" className="form-control"/>
-                                    </td>
-                                    <td>
-                                        <select defaultValue={STATUS_LIST[0]} className="form-select" id="todoStatus">
-                                            {
-                                                STATUS_LIST.map((value, index) => {
-                                                    return <option key={index} value={value}>{value}</option>
-                                                })
-                                            }
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <DatePicker
-                                            id="workDate"
-                                            className="form-control"
-                                            // defaultValue={moment().format(dateFormat)}
-                                            onChange={(date, dateString) => handleChange("start", dateString)}
-                                            dateFormat={dateFormat}
-                                            placeholderText="Select a date"
-                                        />
-                                    </td>
-                                    <td>
-                                        <button className="btn btn-info"><i className="bi bi-plus-circle"></i></button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        )}
+                        <tbody>
+                        <tr>
+                            <td>
+                                <input value="" className="form-control"/>
+                            </td>
+                            <td>
+                                <input value="" className="form-control"/>
+                            </td>
+                            <td>
+                                <select defaultValue={STATUS_LIST[0]} className="form-select" id="todoStatus">
+                                    {
+                                        STATUS_LIST.map((value, index) => {
+                                            return <option key={index} value={value}>{value}</option>
+                                        })
+                                    }
+                                </select>
+                            </td>
+                            <td>
+                                <DatePicker
+                                    id="workDate"
+                                    className="form-control"
+                                    // defaultValue={moment().format(dateFormat)}
+                                    onChange={(date, dateString) => handleChange("start", dateString)}
+                                    dateFormat={dateFormat}
+                                    placeholderText="Select a date"
+                                />
+                            </td>
+                            <td>
+                                <button className="btn btn-info"><i className="bi bi-plus-circle"></i></button>
+                            </td>
+                        </tr>
+                        </tbody>
                     </table>
                 </div>
             </div>

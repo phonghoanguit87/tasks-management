@@ -11,7 +11,6 @@ import {loadingSelector, selectTaskSelector} from "../../redux/selector";
 import commonSlice from "../common/commonSlice";
 
 function TaskDetail() {
-    
     const dispatch = useDispatch()
     let { taskId } = useParams();
     const task = useSelector(selectTaskSelector);

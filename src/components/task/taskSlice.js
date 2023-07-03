@@ -61,6 +61,11 @@ const taskSlice = createSlice({
             })
             .addCase(updateTask.fulfilled, (state, action) => {
                 state.loading = false;
+                state.selectTask = action.payload;
+                popupSwal.fire({
+                    html: <i>The task updated was success!</i>,
+                    icon: 'success'
+                })
             })
             .addCase(updateTask.rejected, (state, action) => {
                 state.loading = false
@@ -103,7 +108,6 @@ const taskSlice = createSlice({
                     html: <i>The task added was success!</i>,
                     icon: 'success'
                 })
-                toastr.success("The task added was success!", "Success");
             })
             .addCase(addTask.rejected, (state, action) => {
                 state.loading = false
